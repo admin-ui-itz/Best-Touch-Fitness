@@ -64,8 +64,12 @@ export function GalleryGrid({ photos }: GalleryGridProps) {
     } else if (e.key === "ArrowLeft") {
       e.preventDefault();
       step(-1);
+    } else if (e.key === "Escape") {
+      // <dialog> handles Escape natively; this keeps it working when the
+      // event is synthetic (assistive tech, automation).
+      e.preventDefault();
+      close();
     }
-    // Escape is handled natively by <dialog> and triggers onClose.
   };
 
   const current = index !== null ? photos[index] : null;

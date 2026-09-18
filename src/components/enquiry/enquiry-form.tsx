@@ -26,8 +26,11 @@ function newToken() {
 
 export function EnquiryForm({ defaultInterest, enabled }: EnquiryFormProps) {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialState);
+  // Kept in refs (not state) so they survive React's automatic form reset
+  // after a server action without triggering a re-render of their own.
   const tokenRef = useRef<HTMLInputElement>(null);
   const renderedAtRef = useRef<HTMLInputElement>(null);
+  const antiSpam = useRef({ token: "", renderedAt: "0" });
   const ids = {
     name: useId(),
     email: useId(),
@@ -43,11 +46,12 @@ export function EnquiryForm({ defaultInterest, enabled }: EnquiryFormProps) {
   // Token + render time are written straight into the hidden inputs on the
   // client so they are unique per visit and never part of the static HTML.
   useEffect(() => {
-    if (tokenRef.current && !tokenRef.current.value) tokenRef.current.value = newToken();
-    if (renderedAtRef.current && renderedAtRef.current.value === "0") {
-      renderedAtRef.current.value = String(Date.now());
+    if (!antiSpam.current.token) {
+      antiSpam.current = { token: newToken(), renderedAt: String(Date.now()) };
     }
-  }, []);
+    if (tokenRef.current) tokenRef.current.value = antiSpam.current.token;
+    if (renderedAtRef.current) renderedAtRef.current.value = antiSpam.current.renderedAt;
+  });
 
   // Move focus to the outcome so screen-reader and keyboard users hear it.
   useEffect(() => {

@@ -49,7 +49,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${archivo.variable} ${manrope.variable}`}>
+    // suppressHydrationWarning: the inline script below adds data-js before hydration.
+    <html lang="en" className={`${archivo.variable} ${manrope.variable}`} suppressHydrationWarning>
       <body className="min-h-dvh flex flex-col">
         {/* Marks JS availability so entrance transitions never hide content without it. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.dataset.js='1'" }} />

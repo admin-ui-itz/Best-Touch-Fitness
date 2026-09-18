@@ -2,6 +2,7 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 
+import { getIntegrationStatus } from "@/lib/env";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -34,7 +35,12 @@ export async function getAdminSession(): Promise<AdminSession | null> {
 /** Redirects to the login page (or a forbidden notice) when not an admin. */
 export async function requireAdmin(): Promise<AdminSession> {
   const session = await getAdminSession();
-  if (!session) redirect("/admin/login?reason=forbidden");
+  if (!session) {
+    const { supabaseAuth, supabaseAdmin } = getIntegrationStatus();
+    // Only call it "forbidden" when auth is actually configured; otherwise the
+    // login page explains that the integration is missing.
+    redirect(supabaseAuth && supabaseAdmin ? "/admin/login?reason=forbidden" : "/admin/login");
+  }
   return session;
 }
 
