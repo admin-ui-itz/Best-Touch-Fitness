@@ -30,3 +30,6 @@ yarn-error.log*
 .vercel
 .turbo
 coverage
+
+# local tooling
+.claude/

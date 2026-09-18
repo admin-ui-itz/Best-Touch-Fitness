@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Provisional design system (no client branding supplied yet).
+   Charcoal + warm white + a restrained electric-lime accent.
+   Contrast notes:
+   - lime-400 text on charcoal-900: ~14:1
+   - charcoal-900 text on lime-400: ~14:1
+   - ink-muted on cream-100: ~5.8:1
+   - lime is never used as text on light backgrounds (fails contrast).
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --color-charcoal-950: #0d0e10;
+  --color-charcoal-900: #17181b;
+  --color-charcoal-800: #212327;
+  --color-charcoal-700: #2e3136;
+  --color-charcoal-600: #4a4e55;
+  --color-charcoal-500: #6b7079;
+
+  --color-cream-50: #fcfaf6;
+  --color-cream-100: #f6f2ea;
+  --color-cream-200: #ece6da;
+  --color-cream-300: #d8d0c0;
+  --color-cream-400: #b9b0a0;
+
+  --color-lime-300: #dbf76a;
+  --color-lime-400: #c8ef3a;
+  --color-lime-500: #b4dc1f;
+  --color-lime-600: #8fb60c;
+  --color-lime-700: #5f7a05;
+
+  --color-ink: #17181b;
+  --color-ink-muted: #5b6069;
+  --color-ink-on-dark: #f6f2ea;
+  --color-ink-on-dark-muted: #b9bcc4;
+
+  --color-danger: #b42318;
+  --color-danger-soft: #fee4e2;
+  --color-success: #067647;
+  --color-success-soft: #dcfae6;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  --shadow-soft: 0 1px 2px rgb(13 14 16 / 0.06), 0 12px 32px -12px rgb(13 14 16 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(13 14 16 / 0.08), 0 24px 48px -16px rgb(13 14 16 / 0.28);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-cream-100 text-ink font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-extrabold tracking-tight text-balance;
+  }
+
+  p {
+    @apply text-pretty;
+  }
+
+  /* Global, visible focus indicator. Works on light and dark surfaces. */
+  :focus-visible {
+    outline: 3px solid var(--color-lime-500);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .dark-surface :focus-visible {
+    outline-color: var(--color-lime-400);
+  }
+
+  ::selection {
+    background: var(--color-lime-400);
+    color: var(--color-charcoal-900);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 font-display text-xs font-bold uppercase tracking-[0.18em];
+  }
+
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-2 w-2 rounded-full bg-lime-500;
+  }
+
+  .dark-surface .eyebrow::before {
+    @apply bg-lime-400;
+  }
+
+  .prose-gym {
+    @apply text-base leading-relaxed text-ink-muted sm:text-lg;
+  }
+
+  .dark-surface .prose-gym {
+    @apply text-ink-on-dark-muted;
+  }
+
+  /* Buttons ------------------------------------------------------------- */
+  .btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 font-display text-sm font-bold uppercase tracking-wider transition-[transform,background-color,color,box-shadow] duration-200 select-none;
+    transition-timing-function: var(--ease-out-soft);
+  }
+
+  .btn:active {
+    transform: translateY(1px) scale(0.985);
+  }
+
+  .btn[aria-disabled="true"],
+  .btn:disabled {
+    @apply cursor-not-allowed opacity-60;
+  }
+
+  .btn-primary {
+    @apply bg-lime-400 text-charcoal-900 shadow-soft hover:bg-lime-300 hover:shadow-lift;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-charcoal-900 bg-transparent text-charcoal-900 hover:bg-charcoal-900 hover:text-cream-100;
+  }
+
+  .dark-surface .btn-secondary {
+    @apply border-cream-100 text-cream-100 hover:bg-cream-100 hover:text-charcoal-900;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-charcoal-900 hover:bg-charcoal-900/5;
+  }
+
+  .dark-surface .btn-ghost {
+    @apply text-cream-100 hover:bg-cream-100/10;
+  }
+
+  .btn-sm {
+    @apply min-h-10 px-4 py-2 text-xs;
+  }
+
+  /* Form fields ---------------------------------------------------------- */
+  .field-label {
+    @apply mb-1.5 block font-display text-sm font-bold text-charcoal-900;
+  }
+
+  .field-input {
+    @apply block w-full rounded-xl border border-charcoal-900/20 bg-cream-50 px-4 py-3 text-base text-ink placeholder:text-charcoal-500 focus-visible:border-charcoal-900 focus-visible:outline-lime-500;
+    min-height: 3rem;
+  }
+
+  .field-input[aria-invalid="true"] {
+    @apply border-danger;
+  }
+
+  .field-error {
+    @apply mt-1.5 text-sm font-medium text-danger;
+  }
+
+  .field-hint {
+    @apply mt-1.5 text-sm text-ink-muted;
+  }
+
+  /* Photo frames --------------------------------------------------------- */
+  .photo-frame {
+    @apply relative overflow-hidden rounded-2xl bg-charcoal-800;
+  }
+
+  .photo-frame img {
+    @apply h-full w-full object-cover;
+  }
+}
+
+@layer utilities {
+  /* Entrance transitions. Hidden state only applies once JS is confirmed
+     (html[data-js]) so content is never invisible without JavaScript. */
+  html[data-js] [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.7s var(--ease-out-soft),
+      transform 0.7s var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  html[data-js] [data-reveal][data-inview="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html[data-js] [data-reveal] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
