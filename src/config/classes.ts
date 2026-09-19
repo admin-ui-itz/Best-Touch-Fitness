@@ -28,7 +28,7 @@ export const gymClasses: GymClass[] = [
     suitedTo:
       "Anyone who wants to feel stronger through the hips, core and legs. Options are offered so you can work at your own level.",
     status: "published",
-    photo: "bandedSingleLegBridgeWide",
+    photo: "stockCoupleLungesTwilight",
   },
   {
     slug: "bootcamp",
@@ -38,7 +38,7 @@ export const gymClasses: GymClass[] = [
       "Our all-rounder. Bodyweight movement, dumbbells and team energy under the tent. You will sweat, you will laugh, and you will leave feeling like you did something.",
     suitedTo: "Beginners and regulars alike. Every movement can be scaled up or down.",
     status: "published",
-    photo: "groupSquatUnderTent",
+    photo: "stockGroupPlankFront",
   },
   {
     slug: "senior-circuit",

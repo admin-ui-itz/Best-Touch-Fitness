@@ -47,7 +47,7 @@ export function Hero() {
           aspect="aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2000/924]"
           sizes="(min-width: 1280px) 1216px, 100vw"
           className="mt-12 shadow-lift sm:mt-16"
-          caption="Real classes, real members. Under the tent, every session."
+          caption="Outdoor group training, under the tent, every session."
         />
       </div>
     </section>

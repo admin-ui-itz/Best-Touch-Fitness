@@ -1,0 +1,28 @@
+# ---------------------------------------------------------------------------
+# Netlify configuration.
+#
+# The official Next.js runtime (@netlify/plugin-nextjs, listed under
+# devDependencies) builds this app from the standard `.next` output and
+# deploys routes as Netlify Functions / Edge Functions automatically —
+# no `publish` directory or manual redirects are needed.
+#
+# Environment variables (Supabase, Brevo, secrets) are set in the Netlify UI:
+# Site configuration > Environment variables. See docs/DEPLOYMENT.md.
+# ---------------------------------------------------------------------------
+
+[build]
+  command = "npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Belt-and-braces security headers (next.config.ts also sets these via
+# next/headers, but Netlify's edge applies these even to prerendered HTML
+# served straight from the CDN).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"

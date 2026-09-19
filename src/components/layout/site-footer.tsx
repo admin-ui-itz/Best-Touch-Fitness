@@ -90,7 +90,13 @@ export function SiteFooter() {
           <p>
             &copy; {year} {siteConfig.legalName ?? siteConfig.name}. All rights reserved.
           </p>
-          <p>Photographs show real members and classes.</p>
+          <p>
+            See real class photos in our{" "}
+            <Link href="/gallery" className="underline decoration-lime-400 underline-offset-4 hover:text-cream-100">
+              gallery
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </footer>

@@ -10,6 +10,7 @@ Nothing on the live site is invented. Every item below is currently **hidden** o
 | Legal / trading name for the copyright line | Optional | Footer |
 | Logo files (SVG preferred) | **Needed** | Header, footer, favicon, email header |
 | Brand colours / fonts, if you have them | Optional | Whole site (provisional palette in use) |
+| Licence confirmation for the 10 stock/reference photos (21.webp-30.webp) | **Needed** | Home hero, Bootcamp and Bums, Tums & Thighs photos — see `docs/ASSET-INVENTORY.md` batch 2 |
 
 ## 2. Contact details (all hidden until supplied)
 
@@ -40,8 +41,8 @@ Nothing on the live site is invented. Every item below is currently **hidden** o
 
 - **Supabase** project (database and admin sign-in). We create the admin user for you; there is no public sign-up.
 - **Brevo** account with a **verified sender** (the address enquiry emails come from) and the email address that should receive new-enquiry notifications.
-- **Domain**: confirm the registrar and who controls the DNS (GoDaddy was mentioned but is unconfirmed). Also tell us about any existing email on the domain so we do not disturb it.
-- **Google Cloud VM** running Coolify (or access to whoever manages it).
+- **Domain**: confirmed as managed in AWS Route 53. We need either the Route 53 hosted zone ID (to add two DNS records) or someone with console access to add them. Also tell us about any existing email on the domain so we do not disturb it.
+- **Netlify**: the site is hosted under a separate Netlify account (`services@itkantoor.com`). Connect the GitHub repo via Netlify's "Import from Git" flow, or issue a scoped personal access token — see `docs/DEPLOYMENT.md` section 1. We never ask for or accept an account password.
 
 ## 6. Things we will never add without your say-so
 

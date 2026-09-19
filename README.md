@@ -1,6 +1,6 @@
 # GYM website (working title)
 
-Marketing site and enquiry workflow for an outdoor group-training gym. Built with Next.js 16 (App Router, TypeScript), Tailwind CSS 4, Supabase (Postgres + Auth), Brevo (transactional email) and React Three Fiber for a small hero accent. Deployed as a Docker container on Coolify.
+Marketing site and enquiry workflow for an outdoor group-training gym. Built with Next.js 16 (App Router, TypeScript), Tailwind CSS 4, Supabase (Postgres + Auth), Brevo (transactional email) and React Three Fiber for a small hero accent. Deployed to Netlify, with the domain's DNS authoritative in AWS Route 53.
 
 ## Quick start
 
@@ -54,4 +54,4 @@ docs/                  DEPLOYMENT, OWNER-CHECKLIST, ASSET-INVENTORY
 
 ## Deployment
 
-See `docs/DEPLOYMENT.md` for Coolify settings, environment variables, migrations, Brevo sender verification, DNS, health checks, logs, backups and rollback.
+See `docs/DEPLOYMENT.md` for Netlify setup, environment variables, migrations, Brevo sender verification, Route 53 DNS, health checks, logs, backups and rollback.

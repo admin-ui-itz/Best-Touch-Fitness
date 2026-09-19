@@ -6,8 +6,10 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Liveness/readiness probe for Coolify and the Docker HEALTHCHECK.
- * Exposes only boolean configuration flags, never values.
+ * Health/status endpoint. Useful for an external uptime monitor (UptimeRobot,
+ * Better Uptime, a status page) since Netlify itself does not require a
+ * custom healthcheck for deploys. Exposes only boolean configuration flags,
+ * never values.
  */
 export function GET() {
   return NextResponse.json(

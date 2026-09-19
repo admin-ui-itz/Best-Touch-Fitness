@@ -19,7 +19,11 @@ const stagingHeaders = isProduction
   : [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }];
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // No "output: standalone" here: that mode is for self-hosting via
+  // `node server.js` (e.g. the Docker/Coolify setup this project no longer
+  // uses). Netlify's official Next.js runtime (@netlify/plugin-nextjs)
+  // builds straight from the default `.next` output and packages routes as
+  // Netlify Functions/Edge Functions itself.
   reactStrictMode: true,
   poweredByHeader: false,
   images: {

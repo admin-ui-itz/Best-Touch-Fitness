@@ -1,10 +1,19 @@
 /**
  * Asset inventory for the supplied gym photographs.
  *
- * All images are real outdoor group-training photographs, mostly taken at
- * night under a marquee. Source files were 2000x924 (2.165:1). They are
- * imported statically so next/image knows their intrinsic size and can
- * generate blur placeholders. See docs/ASSET-INVENTORY.md.
+ * Two batches:
+ * 1. Real outdoor group-training photographs, mostly taken at night under a
+ *    marquee (source 1.jpg-20.jpg, 2000x924). These show actual members and
+ *    are captioned/used accordingly.
+ * 2. Stock/reference photography (source 21.webp-30.webp), confirmed by the
+ *    client to be stock or reference imagery, NOT photos of this gym's real
+ *    members or premises. Filenames are prefixed `stock-` and alt text
+ *    describes the activity generically — it never claims a specific
+ *    identity or asserts this is the real facility. See "Photo provenance"
+ *    in docs/ASSET-INVENTORY.md before using any of these in new copy.
+ *
+ * All are imported statically so next/image knows their intrinsic size and
+ * can generate blur placeholders. See docs/ASSET-INVENTORY.md.
  */
 import type { StaticImageData } from "next/image";
 
@@ -26,6 +35,17 @@ import singleLegGluteBridgeGroup from "@/assets/photos/single-leg-glute-bridge-g
 import tentSilhouettesPole from "@/assets/photos/tent-silhouettes-pole.jpg";
 import warmUpCircleLaughing from "@/assets/photos/warm-up-circle-laughing.jpg";
 import wideMatWorkDumbbellPress from "@/assets/photos/wide-mat-work-dumbbell-press.jpg";
+// Batch 2: stock/reference photography — see the file-level comment above.
+import stockBicepCurlSolo from "@/assets/photos/stock-bicep-curl-solo.jpg";
+import stockCoupleHighFive from "@/assets/photos/stock-couple-high-five.jpg";
+import stockCoupleLungesTwilight from "@/assets/photos/stock-couple-lunges-twilight.jpg";
+import stockCoupleRestingMats from "@/assets/photos/stock-couple-resting-mats.jpg";
+import stockCoupleStandingTent from "@/assets/photos/stock-couple-standing-tent.jpg";
+import stockCoupleStretchSeatedTwilight from "@/assets/photos/stock-couple-stretch-seated-twilight.jpg";
+import stockGobletSquatDaylight from "@/assets/photos/stock-goblet-squat-daylight.jpg";
+import stockGroupArmStretchTwilight from "@/assets/photos/stock-group-arm-stretch-twilight.jpg";
+import stockGroupPlankFront from "@/assets/photos/stock-group-plank-front.jpg";
+import stockWomanTowelPortrait from "@/assets/photos/stock-woman-towel-portrait.jpg";
 
 export type Photo = {
   src: StaticImageData;
@@ -35,6 +55,13 @@ export type Photo = {
   focus: string;
   /** Source filename as supplied by the client, for traceability. */
   source: string;
+  /**
+   * True for stock/reference photography rather than real photos of this
+   * gym. Confirmed by the client — see the file-level comment above. Keep
+   * alt text and any nearby copy free of claims that these are real members
+   * or this exact facility.
+   */
+  isStock?: boolean;
 };
 
 export const photos = {
@@ -146,12 +173,88 @@ export const photos = {
     focus: "50% 60%",
     source: "4.jpg",
   },
+
+  // --- Batch 2: stock/reference photography (not this gym's real members) ---
+  stockCoupleStandingTent: {
+    src: stockCoupleStandingTent,
+    alt: "Two people standing together on exercise mats under an outdoor marquee, smiling, with dumbbells nearby.",
+    focus: "50% 40%",
+    source: "30.webp",
+    isStock: true,
+  },
+  stockGroupPlankFront: {
+    src: stockGroupPlankFront,
+    alt: "A small group holding a plank position on mats under an outdoor marquee.",
+    focus: "50% 45%",
+    source: "24.webp",
+    isStock: true,
+  },
+  stockCoupleLungesTwilight: {
+    src: stockCoupleLungesTwilight,
+    alt: "Two people performing a lunge side by side outdoors at twilight.",
+    focus: "50% 55%",
+    source: "23.webp",
+    isStock: true,
+  },
+  stockGobletSquatDaylight: {
+    src: stockGobletSquatDaylight,
+    alt: "A person holding a dumbbell at chest height while performing a squat outdoors in daylight.",
+    focus: "50% 35%",
+    source: "21.webp",
+    isStock: true,
+  },
+  stockBicepCurlSolo: {
+    src: stockBicepCurlSolo,
+    alt: "A person performing a dumbbell bicep curl outdoors in the evening.",
+    focus: "50% 35%",
+    source: "22.webp",
+    isStock: true,
+  },
+  stockCoupleStretchSeatedTwilight: {
+    src: stockCoupleStretchSeatedTwilight,
+    alt: "Two people seated on mats stretching outdoors at twilight.",
+    focus: "50% 50%",
+    source: "25.webp",
+    isStock: true,
+  },
+  stockCoupleHighFive: {
+    src: stockCoupleHighFive,
+    alt: "Two people high-fiving after a workout outdoors.",
+    focus: "50% 40%",
+    source: "26.webp",
+    isStock: true,
+  },
+  stockWomanTowelPortrait: {
+    src: stockWomanTowelPortrait,
+    alt: "A person with a towel around their shoulders holding a water bottle after a workout.",
+    focus: "50% 30%",
+    source: "27.webp",
+    isStock: true,
+  },
+  stockGroupArmStretchTwilight: {
+    src: stockGroupArmStretchTwilight,
+    alt: "A small group doing a cross-body arm stretch outdoors at twilight.",
+    focus: "50% 40%",
+    source: "28.webp",
+    isStock: true,
+  },
+  stockCoupleRestingMats: {
+    src: stockCoupleRestingMats,
+    alt: "Two people sitting on mats resting after a workout, with dumbbells nearby.",
+    focus: "50% 50%",
+    source: "29.webp",
+    isStock: true,
+  },
 } satisfies Record<string, Photo>;
 
 export type PhotoKey = keyof typeof photos;
 
-/** Photo used for the home hero. Well lit, coach centred, faces visible. */
-export const heroPhoto: Photo = photos.gobletSquatHoldInstructor;
+/**
+ * Photo used for the home hero banner. Stock/reference photography (see
+ * batch 2 above) — bright and welcoming to lead the page. The real class
+ * photos (batch 1) remain the exclusive content of the Gallery page.
+ */
+export const heroPhoto: Photo = photos.stockCoupleStandingTent;
 
 /** Curated gallery order. Clear, well lit, respectful framing first. */
 export const galleryPhotoKeys: PhotoKey[] = [
@@ -177,4 +280,10 @@ export const galleryPhotoKeys: PhotoKey[] = [
  * Supplied files intentionally NOT used on the public site:
  * - 3.jpg  (plank-position-from-behind): dark, framed from behind; not respectful of members.
  * - 20.jpg (motion-blur-forward-fold): heavy motion blur, unusable.
+ *
+ * Batch 2 (stock) files registered above but not currently placed anywhere
+ * (kept available for future use — e.g. About or Nutrition — if wanted):
+ * stockGobletSquatDaylight, stockBicepCurlSolo, stockCoupleStretchSeatedTwilight,
+ * stockCoupleHighFive, stockWomanTowelPortrait, stockGroupArmStretchTwilight,
+ * stockCoupleRestingMats.
  */
