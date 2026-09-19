@@ -1,6 +1,6 @@
-# GYM website (working title)
+# Best Touch Fitness website
 
-Marketing site and enquiry workflow for an outdoor group-training gym. Built with Next.js 16 (App Router, TypeScript), Tailwind CSS 4, Supabase (Postgres + Auth), Brevo (transactional email) and React Three Fiber for a small hero accent. Deployed to Netlify, with the domain's DNS authoritative in AWS Route 53.
+Marketing site and enquiry workflow for Best Touch Fitness, an outdoor group-training gym. Built with Next.js 16 (App Router, TypeScript), Tailwind CSS 4, Supabase (Postgres + Auth), Brevo (transactional email) and React Three Fiber for a small hero accent. Deployed to Netlify, with the domain's DNS authoritative in AWS Route 53.
 
 ## Quick start
 

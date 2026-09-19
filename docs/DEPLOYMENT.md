@@ -6,13 +6,13 @@ The site deploys to Netlify using the official Next.js runtime (`@netlify/plugin
 
 ## 1. Netlify account and site access
 
-The Netlify account for this project uses a different login (`services@itkantoor.com`) than whoever is reading this. **Do not share that account's password with anyone or anything, including an AI assistant** — nothing here should ever need it. There are two clean ways to connect this repository:
+The Netlify account that will host this site may be different from whoever is reading this. **Never share that account's password with anyone or anything, including an AI assistant** — nothing here should ever need it. There are two clean ways to connect this repository:
 
 **Option A — Import from Git (simplest, no tokens needed)**
 
-1. Sign in to Netlify as `services@itkantoor.com` at app.netlify.com.
+1. Sign in to Netlify at app.netlify.com with the account that should own this site.
 2. **Add new site > Import an existing project > Deploy with GitHub.**
-3. Authorise Netlify's GitHub App for the `RAGthecoder/gym-website` repository only (not all repos).
+3. Authorise Netlify's GitHub App for the `admin-ui-itz/Best-Touch-Fitness` repository only (not all repos).
 4. Netlify reads `netlify.toml` automatically — build command and the Next.js plugin are already configured. No "publish directory" needs setting.
 5. Add the environment variables from section 2 under **Site configuration > Environment variables** before the first real deploy.
 

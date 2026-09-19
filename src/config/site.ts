@@ -37,10 +37,10 @@ export type TimetableEntry = {
 };
 
 export const siteConfig = {
-  /** Working title until the client confirms the brand name. */
-  name: "GYM",
-  /** Used in copy such as "the GYM community". */
-  shortName: "GYM",
+  /** Confirmed business name. */
+  name: "Best Touch Fitness",
+  /** Used in copy such as "the Best Touch Fitness community". */
+  shortName: "Best Touch Fitness",
   legalName: null as string | null,
   tagline: "Get stronger. Move better. Find your community.",
   description:

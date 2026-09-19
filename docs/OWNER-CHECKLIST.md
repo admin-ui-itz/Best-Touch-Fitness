@@ -6,8 +6,8 @@ Nothing on the live site is invented. Every item below is currently **hidden** o
 
 | Item | Status | Where it appears |
 | --- | --- | --- |
-| Business name (currently the working title "GYM") | **Needed** | Everywhere: header, footer, page titles, emails |
-| Legal / trading name for the copyright line | Optional | Footer |
+| Business name | **Confirmed**: "Best Touch Fitness" | Everywhere: header, footer, page titles, emails |
+| Legal / trading name for the copyright line | Optional (defaults to "Best Touch Fitness" if not set) | Footer |
 | Logo files (SVG preferred) | **Needed** | Header, footer, favicon, email header |
 | Brand colours / fonts, if you have them | Optional | Whole site (provisional palette in use) |
 | Licence confirmation for the 10 stock/reference photos (21.webp-30.webp) | **Needed** | Home hero, Bootcamp and Bums, Tums & Thighs photos — see `docs/ASSET-INVENTORY.md` batch 2 |
@@ -42,7 +42,8 @@ Nothing on the live site is invented. Every item below is currently **hidden** o
 - **Supabase** project (database and admin sign-in). We create the admin user for you; there is no public sign-up.
 - **Brevo** account with a **verified sender** (the address enquiry emails come from) and the email address that should receive new-enquiry notifications.
 - **Domain**: confirmed as managed in AWS Route 53. We need either the Route 53 hosted zone ID (to add two DNS records) or someone with console access to add them. Also tell us about any existing email on the domain so we do not disturb it.
-- **Netlify**: the site is hosted under a separate Netlify account (`services@itkantoor.com`). Connect the GitHub repo via Netlify's "Import from Git" flow, or issue a scoped personal access token — see `docs/DEPLOYMENT.md` section 1. We never ask for or accept an account password.
+- **GitHub**: code lives at [github.com/admin-ui-itz/Best-Touch-Fitness](https://github.com/admin-ui-itz/Best-Touch-Fitness) (confirmed, access granted).
+- **Netlify**: connect that GitHub repo to your Netlify account via Netlify's "Import from Git" flow, or issue a scoped personal access token — see `docs/DEPLOYMENT.md` section 1. We never ask for or accept an account password.
 
 ## 6. Things we will never add without your say-so
 

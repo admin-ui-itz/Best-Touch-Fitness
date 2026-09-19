@@ -34,7 +34,7 @@ export const env = {
 
   brevoApiKey: real("BREVO_API_KEY"),
   brevoSenderEmail: real("BREVO_SENDER_EMAIL"),
-  brevoSenderName: read("BREVO_SENDER_NAME") ?? "GYM",
+  brevoSenderName: read("BREVO_SENDER_NAME") ?? "Best Touch Fitness",
   enquiryNotifyEmail: real("ENQUIRY_NOTIFY_EMAIL"),
   enquiryReplyToEmail: real("ENQUIRY_REPLY_TO_EMAIL"),
 

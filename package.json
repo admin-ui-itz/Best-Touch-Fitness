@@ -1,8 +1,8 @@
 {
-  "name": "gym-website",
+  "name": "best-touch-fitness",
   "version": "0.1.0",
   "private": true,
-  "description": "Marketing website and enquiry workflow for GYM (working title).",
+  "description": "Marketing website and enquiry workflow for Best Touch Fitness.",
   "engines": {
     "node": ">=20.9.0"
   },

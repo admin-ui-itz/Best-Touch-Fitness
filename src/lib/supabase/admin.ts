@@ -19,7 +19,7 @@ export function getSupabaseAdmin(): SupabaseClient<Database> | null {
   if (!cached) {
     cached = createClient<Database>(env.supabaseUrl, env.supabaseServiceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-      global: { headers: { "X-Client-Info": "gym-website-server" } },
+      global: { headers: { "X-Client-Info": "best-touch-fitness-server" } },
     });
   }
   return cached;
