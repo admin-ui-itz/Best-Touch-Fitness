@@ -25,7 +25,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
         </p>
       ) : null}
 
-      <div className="mt-8 rounded-2xl border border-charcoal-900/10 bg-cream-50 p-6">
+      <div className="mt-8 rounded-xl border border-cream-300 bg-cream-50 p-6">
         {integrations.supabaseAuth && integrations.supabaseAdmin ? (
           <LoginForm next={next} />
         ) : (

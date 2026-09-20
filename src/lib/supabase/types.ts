@@ -16,7 +16,7 @@ export type EnquiryRow = {
   email: string;
   phone: string | null;
   interest: string;
-  message: string;
+  message: string | null;
   marketing_consent: boolean;
   status: EnquiryStatus;
   client_token: string;

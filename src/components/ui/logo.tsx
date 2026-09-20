@@ -1,29 +1,63 @@
+import Image from "next/image";
 import Link from "next/link";
 
+import logoSrc from "@/assets/brand/logo.png";
 import { siteConfig } from "@/config/site";
 
-/** Provisional wordmark: dumbbell glyph + name. Swap for client branding when supplied. */
-export function Logo({ className = "" }: { className?: string }) {
+type LogoProps = {
+  className?: string;
+  /** Pixel size of the circular mark (square). Header/admin: 40-44. Footer: larger. */
+  markSize?: number;
+  /** Show "Best Touch Fitness" as separate readable text next to the mark.
+   * The supplied logo's lettering is too small to read at UI sizes, so the
+   * brief calls for pairing it with a readable name rather than relying on
+   * the artwork alone. */
+  showWordmark?: boolean;
+  wordmarkClassName?: string;
+  /**
+   * The supplied logo file has an opaque white square canvas around the
+   * circular badge (no transparency) — see docs/ASSET-INVENTORY.md. On a
+   * light header that blends in natively. On a dark surface (footer) it
+   * would otherwise show as a hard-edged white box, so we round that
+   * canvas's own corners into a deliberate "badge card" instead. This only
+   * wraps/crops the presentation; the artwork pixels are untouched.
+   */
+  plate?: boolean;
+};
+
+export function Logo({
+  className = "",
+  markSize = 40,
+  showWordmark = true,
+  wordmarkClassName = "",
+  plate = false,
+}: LogoProps) {
   return (
     <Link
       href="/"
-      className={`inline-flex items-center gap-2.5 font-display text-xl font-black tracking-tight ${className}`}
+      className={`inline-flex items-center gap-3 ${className}`}
       aria-label={`${siteConfig.name} home`}
     >
-      <DumbbellGlyph className="h-6 w-6 text-lime-500" />
-      <span>{siteConfig.name}</span>
+      <span
+        className={plate ? "block shrink-0 overflow-hidden rounded-xl shadow-soft" : "block shrink-0"}
+        style={{ width: markSize, height: markSize }}
+      >
+        <Image
+          src={logoSrc}
+          alt=""
+          width={markSize}
+          height={markSize}
+          className="h-full w-full object-contain"
+          priority
+        />
+      </span>
+      {showWordmark ? (
+        <span className={`font-display text-lg font-black tracking-tight text-balance ${wordmarkClassName}`}>
+          {siteConfig.name}
+        </span>
+      ) : (
+        <span className="sr-only">{siteConfig.name}</span>
+      )}
     </Link>
-  );
-}
-
-export function DumbbellGlyph({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true" className={className}>
-      <rect x="2" y="11" width="4" height="10" rx="1.5" fill="currentColor" />
-      <rect x="6" y="8" width="4" height="16" rx="1.5" fill="currentColor" />
-      <rect x="10" y="14" width="12" height="4" rx="1" fill="currentColor" />
-      <rect x="22" y="8" width="4" height="16" rx="1.5" fill="currentColor" />
-      <rect x="26" y="11" width="4" height="10" rx="1.5" fill="currentColor" />
-    </svg>
   );
 }

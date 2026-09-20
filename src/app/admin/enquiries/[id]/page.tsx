@@ -48,11 +48,11 @@ export default async function AdminEnquiryDetailPage({ params }: Props) {
           Received <time dateTime={enquiry.created_at}>{new Date(enquiry.created_at).toLocaleString("en-GB")}</time>
         </p>
 
-        <dl className="mt-8 grid gap-4 rounded-2xl border border-charcoal-900/10 bg-cream-50 p-6 sm:grid-cols-2">
+        <dl className="mt-8 grid gap-4 rounded-xl border border-cream-300 bg-cream-50 p-6 sm:grid-cols-2">
           <div>
             <dt className="font-display text-xs font-bold uppercase tracking-[0.14em] text-ink-muted">Email</dt>
             <dd className="mt-1">
-              <a href={`mailto:${enquiry.email}`} className="font-semibold underline decoration-lime-500 decoration-2 underline-offset-4">
+              <a href={`mailto:${enquiry.email}`} className="font-semibold underline decoration-brand-500 decoration-2 underline-offset-4">
                 {enquiry.email}
               </a>
             </dd>
@@ -79,7 +79,9 @@ export default async function AdminEnquiryDetailPage({ params }: Props) {
           </div>
           <div className="sm:col-span-2">
             <dt className="font-display text-xs font-bold uppercase tracking-[0.14em] text-ink-muted">Message</dt>
-            <dd className="mt-2 whitespace-pre-wrap rounded-xl bg-cream-100 p-4">{enquiry.message}</dd>
+            <dd className="mt-2 whitespace-pre-wrap rounded-xl bg-cream-100 p-4">
+              {enquiry.message || <span className="italic text-ink-muted">No message included.</span>}
+            </dd>
           </div>
         </dl>
 
@@ -96,7 +98,7 @@ export default async function AdminEnquiryDetailPage({ params }: Props) {
       </div>
 
       <aside className="space-y-8">
-        <section aria-labelledby="status-heading" className="rounded-2xl border border-charcoal-900/10 bg-cream-50 p-6">
+        <section aria-labelledby="status-heading" className="rounded-xl border border-cream-300 bg-cream-50 p-6">
           <h2 id="status-heading" className="text-xl">Status</h2>
           <ActionForm action={updateEnquiryStatus} submitLabel="Update status" className="mt-3">
             <input type="hidden" name="id" value={enquiry.id} />
@@ -113,7 +115,7 @@ export default async function AdminEnquiryDetailPage({ params }: Props) {
           </ActionForm>
         </section>
 
-        <section aria-labelledby="email-heading" className="rounded-2xl border border-charcoal-900/10 bg-cream-50 p-6">
+        <section aria-labelledby="email-heading" className="rounded-xl border border-cream-300 bg-cream-50 p-6">
           <h2 id="email-heading" className="text-xl">Email delivery</h2>
           <ul className="mt-3 space-y-3">
             {(deliveries ?? []).map((d) => (

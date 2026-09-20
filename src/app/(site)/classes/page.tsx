@@ -10,7 +10,7 @@ import { createMetadata } from "@/lib/seo";
 export const metadata = createMetadata({
   title: "Classes",
   description:
-    "Bums, Tums & Thighs, Bootcamp and Senior Circuit: coached outdoor group classes with options for every level. Enquire about the class that suits you.",
+    "Bums, Tums & Thighs, Bootcamp and Senior Circuit: coached outdoor group classes with options for every level. Compare who each class suits and enquire.",
   path: "/classes",
 });
 
@@ -39,7 +39,7 @@ export default function ClassesPage() {
               key={c.slug}
               as="article"
               id={c.slug}
-              className="grid scroll-mt-24 gap-8 lg:grid-cols-2 lg:items-center"
+              className="grid scroll-mt-24 gap-8 lg:grid-cols-2 lg:items-start"
             >
               <PhotoFigure
                 photo={photoForClass(c)}
@@ -51,10 +51,45 @@ export default function ClassesPage() {
                 <p className="eyebrow">Class {String(i + 1).padStart(2, "0")}</p>
                 <h2 className="mt-4 text-3xl sm:text-4xl">{c.name}</h2>
                 <p className="prose-gym mt-4">{c.description}</p>
-                <h3 className="mt-6 font-display text-xs font-bold uppercase tracking-[0.18em]">
-                  Who it suits
-                </h3>
-                <p className="mt-2 text-ink-muted">{c.suitedTo}</p>
+
+                {/* Decision-relevant facts up front, not buried in prose. */}
+                <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 rounded-xl border border-cream-300 bg-cream-50 p-5">
+                  <div>
+                    <dt className="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-charcoal-500">
+                      Who it suits
+                    </dt>
+                    <dd className="mt-1 text-sm text-ink-muted">{c.suitedTo}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-charcoal-500">
+                      Intensity
+                    </dt>
+                    <dd className="mt-1 text-sm text-ink-muted">{c.intensity}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-charcoal-500">
+                      Duration
+                    </dt>
+                    <dd className="mt-1 text-sm text-ink-muted">
+                      {c.duration ?? <span className="italic text-charcoal-500">To be confirmed</span>}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-charcoal-500">
+                      Price
+                    </dt>
+                    <dd className="mt-1 text-sm text-ink-muted">
+                      {c.price ?? <span className="italic text-charcoal-500">To be confirmed</span>}
+                    </dd>
+                  </div>
+                  <div className="col-span-2">
+                    <dt className="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-charcoal-500">
+                      What to bring
+                    </dt>
+                    <dd className="mt-1 text-sm text-ink-muted">{c.whatToBring}</dd>
+                  </div>
+                </dl>
+
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link href={`/contact?interest=${c.slug}`} className="btn btn-primary">
                     Enquire about {c.name}
@@ -70,12 +105,8 @@ export default function ClassesPage() {
             <h2 className="text-2xl">On the way</h2>
             <ul className="mt-4 flex flex-wrap gap-3">
               {comingSoonClasses.map((c) => (
-                <li
-                  key={c.slug}
-                  className="rounded-full border border-charcoal-900/20 px-4 py-2 text-sm font-semibold"
-                >
-                  {c.name}{" "}
-                  <span className="text-ink-muted">({c.comingSoonLabel ?? "Coming soon"})</span>
+                <li key={c.slug} className="rounded-lg border border-cream-300 px-4 py-2 text-sm font-semibold">
+                  {c.name} <span className="text-ink-muted">({c.comingSoonLabel ?? "Coming soon"})</span>
                 </li>
               ))}
             </ul>
@@ -93,10 +124,10 @@ export default function ClassesPage() {
         <div className="container-x flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-2xl sm:text-3xl">Not sure where to start?</h2>
-            <p className="mt-2 text-ink-muted">Send a general enquiry and we will help you choose.</p>
+            <p className="mt-2 text-ink-muted">Tell us a little about yourself and we will help you choose.</p>
           </div>
-          <Link href="/contact?interest=general" className="btn btn-secondary shrink-0">
-            Enquire about joining
+          <Link href="/contact?interest=help-me-choose" className="btn btn-secondary shrink-0">
+            Help me choose
           </Link>
         </div>
       </section>

@@ -17,15 +17,15 @@ export function SiteFooter() {
     <footer className="dark-surface mt-auto bg-charcoal-900 text-cream-100">
       <div className="container-x grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:py-20">
         <div className="max-w-md">
-          <Logo className="text-cream-100" />
+          <Logo markSize={64} plate wordmarkClassName="text-xl text-cream-100" />
           <p className="mt-4 text-ink-on-dark-muted">{siteConfig.description}</p>
           <Link href="/contact" className="btn btn-primary mt-6">
-            Enquire about joining
+            Find my first class
           </Link>
         </div>
 
         <nav aria-label="Footer">
-          <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-lime-400">Explore</h2>
+          <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-brand-400">Explore</h2>
           <ul className="mt-4 space-y-2.5">
             {footerLinks.map((l) => (
               <li key={l.href}>
@@ -38,7 +38,7 @@ export function SiteFooter() {
         </nav>
 
         <div>
-          <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-lime-400">Get in touch</h2>
+          <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-brand-400">Get in touch</h2>
           {hasContactDetails ? (
             <ul className="mt-4 space-y-2.5 text-ink-on-dark-muted">
               {siteConfig.contact.email ? (
@@ -66,7 +66,7 @@ export function SiteFooter() {
           ) : (
             <p className="mt-4 text-ink-on-dark-muted">
               The quickest way to reach us is the{" "}
-              <Link href="/contact" className="text-cream-100 underline decoration-lime-400 underline-offset-4">
+              <Link href="/contact" className="text-cream-100 underline decoration-brand-500 underline-offset-4">
                 enquiry form
               </Link>
               .
@@ -92,7 +92,7 @@ export function SiteFooter() {
           </p>
           <p>
             See real class photos in our{" "}
-            <Link href="/gallery" className="underline decoration-lime-400 underline-offset-4 hover:text-cream-100">
+            <Link href="/gallery" className="underline decoration-brand-500 underline-offset-4 hover:text-cream-100">
               gallery
             </Link>
             .

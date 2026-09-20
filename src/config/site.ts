@@ -42,9 +42,9 @@ export const siteConfig = {
   /** Used in copy such as "the Best Touch Fitness community". */
   shortName: "Best Touch Fitness",
   legalName: null as string | null,
-  tagline: "Get stronger. Move better. Find your community.",
+  tagline: "Get stronger. Together.",
   description:
-    "Outdoor group training for every age and stage. Join our classes, move with a supportive community and build strength that lasts.",
+    "Outdoor group training, supportive coaching and a community that helps you keep showing up.",
   /** Canonical origin. Set NEXT_PUBLIC_SITE_URL in the environment. */
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, ""),
   locale: "en",
@@ -86,6 +86,24 @@ export const siteConfig = {
 
   /** null = timetable hidden everywhere. */
   timetable: null as TimetableEntry[] | null,
+
+  /** Shown in the homepage info strip and FAQ. null = hidden until confirmed. */
+  pricing: {
+    /** Short display string, e.g. "From $25 / class". */
+    startingPrice: null as string | null,
+    /** Link to a fuller pricing page/document, if one exists. */
+    pricingUrl: null as string | null,
+  },
+
+  /**
+   * Operational answers for the first-session FAQ. Each is null until the
+   * owner confirms it — never filled with an invented policy. Location and
+   * parking come from `address` instead once that is supplied.
+   */
+  operationalFaq: {
+    weatherPolicy: null as string | null,
+    paymentAndCancellation: null as string | null,
+  },
 
   /**
    * Planned classes (Spin, Step) are hidden by default. Set to true to show

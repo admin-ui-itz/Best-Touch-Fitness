@@ -69,7 +69,7 @@ export function EnquiryForm({ defaultInterest, enabled }: EnquiryFormProps) {
         ref={successRef}
         tabIndex={-1}
         role="status"
-        className="rounded-2xl border border-success/30 bg-success-soft p-6 text-charcoal-900"
+        className="rounded-xl border border-success/30 bg-success-soft p-6 text-charcoal-900"
       >
         <h2 className="text-2xl">Enquiry received</h2>
         <p className="mt-3">{state.message}</p>
@@ -84,7 +84,7 @@ export function EnquiryForm({ defaultInterest, enabled }: EnquiryFormProps) {
   return (
     <form action={formAction} noValidate className="space-y-6" aria-describedby={ids.status}>
       {!enabled ? (
-        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950" role="status">
+        <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950" role="status">
           <p className="font-semibold">Enquiries are not live yet.</p>
           <p>
             This form is a preview. Submissions will not be stored or sent until the enquiry service is
@@ -99,7 +99,7 @@ export function EnquiryForm({ defaultInterest, enabled }: EnquiryFormProps) {
           tabIndex={-1}
           role="alert"
           id={ids.status}
-          className="rounded-2xl border border-danger/30 bg-danger-soft p-4 text-sm font-medium text-danger"
+          className="rounded-xl border border-danger/30 bg-danger-soft p-4 text-sm font-medium text-danger"
         >
           {state.message}
         </div>
@@ -222,14 +222,12 @@ export function EnquiryForm({ defaultInterest, enabled }: EnquiryFormProps) {
 
       <div>
         <label htmlFor={ids.message} className="field-label">
-          Message <span aria-hidden="true">*</span>
+          Message <span className="font-normal text-ink-muted">(optional)</span>
         </label>
         <textarea
           id={ids.message}
           name="message"
-          required
           rows={5}
-          minLength={10}
           maxLength={2000}
           defaultValue={values.message ?? ""}
           aria-invalid={errors.message ? "true" : undefined}
@@ -254,7 +252,7 @@ export function EnquiryForm({ defaultInterest, enabled }: EnquiryFormProps) {
             name="marketingConsent"
             type="checkbox"
             defaultChecked={Boolean(values.marketingConsent)}
-            className="mt-1 h-5 w-5 accent-lime-600"
+            className="mt-1 h-5 w-5 accent-brand-600"
           />
           <label htmlFor={ids.consent} className="text-sm text-ink-muted">
             Keep me posted about classes and news by email. Optional, and you can unsubscribe at any
@@ -283,9 +281,6 @@ export function EnquiryForm({ defaultInterest, enabled }: EnquiryFormProps) {
             "Send enquiry"
           )}
         </button>
-        <p className="text-sm text-ink-muted">
-          Sending an enquiry does not book a class. We reply personally to every message.
-        </p>
       </div>
       <p className="sr-only" aria-live="polite">
         {pending ? "Sending your enquiry, please wait." : ""}

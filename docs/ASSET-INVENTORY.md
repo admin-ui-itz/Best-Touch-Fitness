@@ -1,5 +1,25 @@
 # Asset inventory
 
+## Logo (logo.png, supplied for the visual redesign)
+
+A single PNG, **206 × 201px**, no alpha channel — a black circle containing white/red fitness silhouettes and "THE BEST TOUCH FITNESS SERVICES" lettering, on an opaque white square canvas. Copied unmodified into `src/assets/brand/logo.png` and used by `src/components/ui/logo.tsx`.
+
+Two things worth the owner's attention (also in `docs/OWNER-CHECKLIST.md`):
+
+- **Resolution**: 206px is on the small side for a logo. It's fine at the sizes currently used (40px in the header, 64px in the footer), but would look soft blown up larger. A higher-resolution original (SVG ideally, or a large PNG) would future-proof it.
+- **Background**: the canvas around the circular badge is solid white, not transparent, and the raised-arm silhouette appears to touch/break the circle's edge — which makes an automated "delete the background" pass risky (it could cut into real artwork). We left the file exactly as supplied and instead placed it on a small white rounded "plate" wherever it sits on a dark surface (the footer), so it reads as an intentional badge rather than a stray white box. A transparent-background version would remove the need for that.
+
+## Cinematic scroll video (1v2.mp4, supplied for the redesign)
+
+An 8.06-second, 2562×1440, 60fps H.264 clip (source `D:\Clients 2026\Kevin Glover\Gym\Ai Video\1v2.mp4`, ~12MB): a stable camera pullback starting on a dumbbell and mat, revealing two reference athletes standing together under the real outdoor marquee at night. Matches the brief's description closely — no cuts, no generated lettering, the final frame is a clean wide composition.
+
+Re-encoded via `scripts/prepare-video.mjs` (ffmpeg, bundled through the `ffmpeg-static` npm package so no system install is required) into:
+
+- `public/video/scroll-story.mp4` — 1920×1080, 30fps, ~2.65 Mbps H.264, **audio stripped** (the section is muted/decorative), regular keyframes every 0.5s for smooth scroll-scrubbing, `+faststart` for progressive playback. **2.53 MB**, down from 12 MB.
+- `public/video/scroll-story-poster.jpg` — the final frame, 1920×1079, mozjpeg-compressed, **116 KB**. Shown immediately and used as the fallback on mobile/reduced-motion/slow connections.
+
+Central config: `src/config/video.ts`. Swapping the clip later is a one-line change there plus re-running the prepare script — no component edits needed.
+
 ## Batch 1: real class photography (1.jpg-20.jpg)
 
 Twenty photographs were supplied as `1.jpg` to `20.jpg`. All are **2000 x 924 px** (2.165:1 panoramic crops), JPEG, 168 to 327 KB. They are real outdoor group-training photographs taken at night under a white marquee on a raised grey platform. No logo, brand colours or typography were supplied, so a provisional design system is used (see README).

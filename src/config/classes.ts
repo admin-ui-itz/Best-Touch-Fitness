@@ -12,6 +12,13 @@ export type GymClass = {
   description: string;
   /** Who it suits, phrased without medical claims. */
   suitedTo: string;
+  /** Intensity and how it's modified for different levels, no invented specifics. */
+  intensity: string;
+  /** Practical, low-risk suggestion — not an operational policy. */
+  whatToBring: string;
+  /** Only set once genuinely confirmed; omitted from the page otherwise. */
+  duration?: string;
+  price?: string;
   status: ClassStatus;
   /** Label shown only when status is "coming-soon". Editable by the owner. */
   comingSoonLabel?: string;
@@ -27,6 +34,9 @@ export const gymClasses: GymClass[] = [
       "A session built around your glutes, core and legs. Expect mat work, resistance bands and light weights, with the pace set by the group and the coach keeping form front of mind.",
     suitedTo:
       "Anyone who wants to feel stronger through the hips, core and legs. Options are offered so you can work at your own level.",
+    intensity:
+      "Set by the group and adjusted by the coach. Every exercise has an easier or harder version, so you choose how far to push.",
+    whatToBring: "Water, and a mat if you have one.",
     status: "published",
     photo: "stockCoupleLungesTwilight",
   },
@@ -37,6 +47,9 @@ export const gymClasses: GymClass[] = [
     description:
       "Our all-rounder. Bodyweight movement, dumbbells and team energy under the tent. You will sweat, you will laugh, and you will leave feeling like you did something.",
     suitedTo: "Beginners and regulars alike. Every movement can be scaled up or down.",
+    intensity:
+      "Higher energy than our other classes, but still scaled to you. First-timers are shown modifications for every move.",
+    whatToBring: "Water, and a mat if you have one.",
     status: "published",
     photo: "stockGroupPlankFront",
   },
@@ -47,6 +60,8 @@ export const gymClasses: GymClass[] = [
     description:
       "A circuit-style class designed with older adults in mind. Movements are taken at a comfortable pace with plenty of coaching and options, so you can build confidence session by session.",
     suitedTo: "Senior members who want to stay active, mobile and connected.",
+    intensity: "Deliberately gentler pace with close coaching, built around confidence and consistency rather than intensity.",
+    whatToBring: "Water, and a mat if you have one.",
     status: "published",
     photo: "coolDownTwistStretch",
   },
@@ -56,6 +71,8 @@ export const gymClasses: GymClass[] = [
     summary: "Indoor cycling sessions are on the way.",
     description: "Details will be shared once the class is confirmed.",
     suitedTo: "",
+    intensity: "",
+    whatToBring: "",
     status: "coming-soon",
     comingSoonLabel: "Coming soon",
     photo: "silhouettesUnderTent",
@@ -66,6 +83,8 @@ export const gymClasses: GymClass[] = [
     summary: "Step classes are on the way.",
     description: "Details will be shared once the class is confirmed.",
     suitedTo: "",
+    intensity: "",
+    whatToBring: "",
     status: "coming-soon",
     comingSoonLabel: "Coming soon",
     photo: "silhouettesUnderTent",
@@ -85,11 +104,14 @@ export function getClassBySlug(slug: string) {
 
 /**
  * Options offered in the enquiry form. Coming-soon classes are excluded so
- * nobody can be led to believe they are booking one.
+ * nobody can be led to believe they are booking one. "Help me choose" is
+ * separate from "General enquiry" so undecided visitors have an obvious,
+ * low-commitment option.
  */
 export const enquiryInterests = [
   ...publishedClasses.map((c) => ({ value: c.slug, label: c.name })),
   { value: "nutrition", label: "Nutrition support" },
+  { value: "help-me-choose", label: "Help me choose a class" },
   { value: "general", label: "General enquiry" },
 ];
 

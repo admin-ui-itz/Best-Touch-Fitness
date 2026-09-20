@@ -33,7 +33,7 @@ export default function GalleryPage() {
         <div className="mt-16 flex flex-col items-start gap-4 border-t-2 border-charcoal-900 pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-lg font-semibold">Like what you see? Come and train with us.</p>
           <Link href="/contact" className="btn btn-primary">
-            Enquire about joining
+            Find my first class
           </Link>
         </div>
       </section>

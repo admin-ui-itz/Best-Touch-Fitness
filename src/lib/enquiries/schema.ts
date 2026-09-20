@@ -26,7 +26,8 @@ export const enquirySchema = z.object({
     .string()
     .trim()
     .refine((v) => enquiryInterestValues.includes(v), "Please choose what you are interested in."),
-  message: trimmed(2000).min(10, "Please tell us a little more (at least 10 characters)."),
+  /** Optional: no genuine operational need to require it. */
+  message: trimmed(2000).transform((v) => (v === "" ? null : v)),
   marketingConsent: z.boolean().default(false),
   /** Client-generated UUID used to make submissions idempotent. */
   clientToken: z.string().uuid("Invalid submission token. Please reload the page and try again."),

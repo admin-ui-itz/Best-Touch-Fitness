@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { CoachSection } from "@/components/home/coach-section";
 import { PhotoFigure } from "@/components/ui/photo-figure";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -9,12 +8,11 @@ import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
   title: "About",
-  description: `${siteConfig.name} is a community-first outdoor training group. Coached classes, every age and stage, one tent.`,
+  description: `${siteConfig.name} is outdoor group training under a marquee, coached in person, for a genuine mix of ages and levels.`,
   path: "/about",
 });
 
 export default function AboutPage() {
-  const trainers = siteConfig.trainers;
   return (
     <>
       <section className="container-x pt-16 pb-12 sm:pt-24">
@@ -24,9 +22,9 @@ export default function AboutPage() {
           title="A community that trains together."
           intro={
             <p>
-              {siteConfig.name} started the way most good things do: a few people, a patch of
-              ground and a coach who wanted training to feel welcoming. Today the tent goes up,
-              the mats go down and a mix of ages and abilities show up to move.
+              We train outdoors, under a marquee, with mats down and a coach leading every session in
+              person. The group is a genuine mix of ages and experience — beginners next to regulars,
+              next to our Senior Circuit members.
             </p>
           }
         />
@@ -82,51 +80,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Trainer information is only shown once verified in siteConfig.trainers. */}
-      <section className="bg-cream-200/60 py-20 sm:py-28" aria-labelledby="coaching-heading">
-        <div className="container-x">
-          <SectionHeading
-            id="coaching-heading"
-            eyebrow="Coaching"
-            title={trainers.length ? "Meet the team." : "Coached, every session."}
-            intro={
-              trainers.length ? undefined : (
-                <p>
-                  Every class is led in person by a coach who watches form, offers options and keeps
-                  the group moving together. Ask about the coaching team when you enquire.
-                </p>
-              )
-            }
-          />
-          {trainers.length ? (
-            <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {trainers.map((t) => (
-                <li key={t.name} className="border-t-2 border-charcoal-900 pt-5">
-                  <h3 className="text-2xl">{t.name}</h3>
-                  <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-ink-muted">
-                    {t.role}
-                  </p>
-                  <p className="mt-3 text-ink-muted">{t.bio}</p>
-                  {t.qualifications?.length ? (
-                    <ul className="mt-3 flex flex-wrap gap-2">
-                      {t.qualifications.map((q) => (
-                        <li key={q} className="rounded-full bg-cream-50 px-3 py-1 text-xs font-semibold">
-                          {q}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-          <div className="mt-10">
-            <Link href="/contact" className="btn btn-primary">
-              Enquire about joining
-            </Link>
-          </div>
-        </div>
-      </section>
+      <div className="bg-cream-50">
+        <CoachSection />
+      </div>
     </>
   );
 }

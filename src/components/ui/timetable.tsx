@@ -40,7 +40,7 @@ export function Timetable({ className = "" }: { className?: string }) {
           <tbody>
             {byDay.flatMap(({ day, sessions }) =>
               sessions.map((s, i) => (
-                <tr key={`${day}-${s.start}-${s.classSlug}`} className="border-b border-charcoal-900/10">
+                <tr key={`${day}-${s.start}-${s.classSlug}`} className="border-b border-cream-300">
                   <th scope="row" className="py-3 pr-4 font-semibold">
                     {i === 0 ? day : <span className="sr-only">{day}</span>}
                   </th>

@@ -55,7 +55,7 @@ export default function NutritionPage() {
               come from them.
             </p>
             {partner.name ? (
-              <div className="rounded-2xl border border-charcoal-900/10 bg-cream-50 p-6">
+              <div className="rounded-xl border border-cream-300 bg-cream-50 p-6">
                 <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-ink-muted">
                   Our nutrition partner
                 </p>
@@ -64,7 +64,7 @@ export default function NutritionPage() {
                 {partner.url ? (
                   <a
                     href={partner.url}
-                    className="mt-3 inline-block font-semibold text-charcoal-900 underline decoration-lime-500 decoration-[3px] underline-offset-4"
+                    className="mt-3 inline-block font-semibold text-charcoal-900 underline decoration-brand-500 decoration-[3px] underline-offset-4"
                     rel="noopener"
                   >
                     Visit their website

@@ -19,7 +19,7 @@ const statuses: Array<{ value: EnquiryStatus | "all"; label: string }> = [
 ];
 
 const statusStyles: Record<EnquiryStatus, string> = {
-  new: "bg-lime-400 text-charcoal-900",
+  new: "bg-brand-600 text-white",
   contacted: "bg-charcoal-900 text-cream-100",
   closed: "bg-cream-300 text-charcoal-900",
   spam: "bg-danger-soft text-danger",
@@ -83,10 +83,10 @@ export default async function AdminEnquiriesPage({ searchParams }: AdminPageProp
         </p>
       ) : null}
 
-      <div className="mt-8 overflow-x-auto rounded-2xl border border-charcoal-900/10 bg-cream-50">
+      <div className="mt-8 overflow-x-auto rounded-xl border border-cream-300 bg-cream-50">
         <table className="w-full min-w-[40rem] text-left text-sm">
           <caption className="sr-only">Enquiries list</caption>
-          <thead className="border-b border-charcoal-900/10 font-display text-xs uppercase tracking-[0.14em] text-ink-muted">
+          <thead className="border-b border-cream-300 font-display text-xs uppercase tracking-[0.14em] text-ink-muted">
             <tr>
               <th scope="col" className="px-4 py-3">Received</th>
               <th scope="col" className="px-4 py-3">Name</th>
@@ -102,7 +102,7 @@ export default async function AdminEnquiriesPage({ searchParams }: AdminPageProp
                   <time dateTime={e.created_at}>{new Date(e.created_at).toLocaleString("en-GB")}</time>
                 </td>
                 <td className="px-4 py-3">
-                  <Link href={`/admin/enquiries/${e.id}`} className="font-semibold underline decoration-lime-500 decoration-2 underline-offset-4">
+                  <Link href={`/admin/enquiries/${e.id}`} className="font-semibold underline decoration-brand-500 decoration-2 underline-offset-4">
                     {e.name}
                   </Link>
                 </td>

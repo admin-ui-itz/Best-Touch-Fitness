@@ -11,23 +11,63 @@ export function ClassCard({ gymClass }: { gymClass: GymClass }) {
         photo={photoForClass(gymClass)}
         aspect="aspect-[4/3]"
         sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
-        imgClassName="transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+        imgClassName="transition-transform duration-500 ease-out group-hover:scale-[1.03]"
       />
       <div className="flex flex-1 flex-col gap-3 pt-5">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="text-2xl">{gymClass.name}</h3>
           {comingSoon ? (
-            <span className="rounded-full border border-charcoal-900/20 px-2.5 py-0.5 font-display text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+            <span className="rounded-lg border border-cream-300 px-2.5 py-0.5 font-display text-[11px] font-bold uppercase tracking-wider text-ink-muted">
               {gymClass.comingSoonLabel ?? "Coming soon"}
             </span>
           ) : null}
         </div>
         <p className="prose-gym">{gymClass.summary}</p>
+
         {comingSoon ? null : (
-          <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-2">
+          <dl className="grid grid-cols-1 gap-x-4 gap-y-1.5 border-t border-cream-300 pt-3 text-sm sm:grid-cols-2">
+            <div>
+              <dt className="font-display text-[11px] font-bold uppercase tracking-[0.1em] text-charcoal-500">
+                Who it suits
+              </dt>
+              <dd className="text-ink-muted">{gymClass.suitedTo}</dd>
+            </div>
+            <div>
+              <dt className="font-display text-[11px] font-bold uppercase tracking-[0.1em] text-charcoal-500">
+                Intensity
+              </dt>
+              <dd className="text-ink-muted">{gymClass.intensity}</dd>
+            </div>
+            {gymClass.duration ? (
+              <div>
+                <dt className="font-display text-[11px] font-bold uppercase tracking-[0.1em] text-charcoal-500">
+                  Duration
+                </dt>
+                <dd className="text-ink-muted">{gymClass.duration}</dd>
+              </div>
+            ) : null}
+            {gymClass.price ? (
+              <div>
+                <dt className="font-display text-[11px] font-bold uppercase tracking-[0.1em] text-charcoal-500">
+                  Price
+                </dt>
+                <dd className="text-ink-muted">{gymClass.price}</dd>
+              </div>
+            ) : null}
+            <div>
+              <dt className="font-display text-[11px] font-bold uppercase tracking-[0.1em] text-charcoal-500">
+                Bring
+              </dt>
+              <dd className="text-ink-muted">{gymClass.whatToBring}</dd>
+            </div>
+          </dl>
+        )}
+
+        {comingSoon ? null : (
+          <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-3">
             <Link
               href={`/classes#${gymClass.slug}`}
-              className="font-display text-sm font-bold uppercase tracking-wider underline decoration-lime-500 decoration-[3px] underline-offset-[6px]"
+              className="font-display text-sm font-bold uppercase tracking-wider underline decoration-brand-500 decoration-[3px] underline-offset-[6px]"
             >
               About this class
             </Link>

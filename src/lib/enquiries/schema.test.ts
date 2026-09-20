@@ -28,13 +28,26 @@ describe("parseEnquiryFormData", () => {
     expect(result.values.marketingConsent).toBe(false);
   });
 
-  it("rejects missing or short fields with per-field errors", () => {
-    const result = parseEnquiryFormData(form({ name: "J", email: "nope", message: "short" }));
+  it("rejects missing name/email with per-field errors", () => {
+    const result = parseEnquiryFormData(form({ name: "J", email: "nope" }));
     expect(result.ok).toBe(false);
     if (result.ok) return;
     expect(result.fieldErrors.name).toBeTruthy();
     expect(result.fieldErrors.email).toBeTruthy();
-    expect(result.fieldErrors.message).toBeTruthy();
+  });
+
+  it("treats message as optional: empty is accepted and normalised to null", () => {
+    const result = parseEnquiryFormData(form({ message: "" }));
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.values.message).toBeNull();
+  });
+
+  it("still accepts a short, non-empty message now that the 10-char minimum is gone", () => {
+    const result = parseEnquiryFormData(form({ message: "short" }));
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.values.message).toBe("short");
   });
 
   it("rejects unknown interests, including coming-soon classes", () => {

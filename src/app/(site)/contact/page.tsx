@@ -6,7 +6,7 @@ import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
   title: "Contact",
-  description: `Enquire about joining ${siteConfig.name}. Tell us which class you are interested in and we will reply personally.`,
+  description: `Enquire about joining ${siteConfig.name}. Choose a class or tell us what you're looking for and we will help you take the next step.`,
   path: "/contact",
 });
 
@@ -23,36 +23,65 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
 
   return (
     <>
-      <section className="container-x pt-16 pb-12 sm:pt-24">
+      <section className="container-x pt-16 pb-8 sm:pt-24">
         <SectionHeading
           as="h1"
           eyebrow="Contact"
-          title="Enquire about joining."
-          intro={
-            <p>
-              Tell us which class caught your eye, or send a general question. We reply to every
-              enquiry personally. Sending this form does not book a class.
-            </p>
-          }
+          title="Let&rsquo;s find your first class."
+          intro={<p>Choose a class or tell us what you&rsquo;re looking for. We&rsquo;ll help you take the next step.</p>}
         />
       </section>
 
       <section className="container-x pb-20 sm:pb-28">
+        {/* Stated once, clearly, ahead of the form. */}
+        <div className="mb-10 rounded-xl border border-cream-300 bg-cream-50 px-5 py-4 text-sm font-medium text-charcoal-900 sm:max-w-2xl">
+          This is an enquiry. We&rsquo;ll confirm availability and the next steps with you.
+        </div>
+
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem]">
           <div className="max-w-2xl">
             <EnquiryForm defaultInterest={interest} enabled={integrations.enquiries} />
           </div>
 
-          <aside className="space-y-8 lg:border-l lg:border-charcoal-900/10 lg:pl-10" aria-label="Contact details">
+          <aside className="space-y-8 lg:border-l lg:border-cream-300 lg:pl-10" aria-label="First-session information">
+            {address ? (
+              <div>
+                <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-charcoal-500">
+                  Where we train
+                </h2>
+                <address className="mt-3 not-italic">
+                  {address.street}
+                  <br />
+                  {address.town}
+                  {address.region ? `, ${address.region}` : ""}
+                  <br />
+                  {address.postcode ? `${address.postcode}, ` : ""}
+                  {address.country}
+                </address>
+                {address.mapLinkUrl ? (
+                  <a
+                    href={address.mapLinkUrl}
+                    className="mt-2 inline-block font-semibold underline decoration-brand-500 decoration-[3px] underline-offset-4"
+                    rel="noopener"
+                  >
+                    Get directions
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
+
             {hasContactDetails ? (
               <div>
-                <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-ink-muted">
+                <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-charcoal-500">
                   Other ways to reach us
                 </h2>
                 <ul className="mt-3 space-y-2 text-lg">
                   {siteConfig.contact.email ? (
                     <li>
-                      <a href={`mailto:${siteConfig.contact.email}`} className="font-semibold underline decoration-lime-500 decoration-[3px] underline-offset-4">
+                      <a
+                        href={`mailto:${siteConfig.contact.email}`}
+                        className="font-semibold underline decoration-brand-500 decoration-[3px] underline-offset-4"
+                      >
                         {siteConfig.contact.email}
                       </a>
                     </li>
@@ -75,7 +104,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               </div>
             ) : (
               <div>
-                <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-ink-muted">
+                <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-charcoal-500">
                   Reaching us
                 </h2>
                 <p className="mt-3 text-ink-muted">
@@ -84,31 +113,9 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               </div>
             )}
 
-            {address ? (
-              <div>
-                <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-ink-muted">
-                  Where we train
-                </h2>
-                <address className="mt-3 not-italic">
-                  {address.street}
-                  <br />
-                  {address.town}
-                  {address.region ? `, ${address.region}` : ""}
-                  <br />
-                  {address.postcode ? `${address.postcode}, ` : ""}
-                  {address.country}
-                </address>
-                {address.mapLinkUrl ? (
-                  <a href={address.mapLinkUrl} className="mt-2 inline-block font-semibold underline decoration-lime-500 decoration-[3px] underline-offset-4" rel="noopener">
-                    Open in maps
-                  </a>
-                ) : null}
-              </div>
-            ) : null}
-
             {hours ? (
               <div>
-                <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-ink-muted">
+                <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-charcoal-500">
                   Opening hours
                 </h2>
                 <dl className="mt-3 space-y-1">
@@ -121,11 +128,28 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                 </dl>
               </div>
             ) : null}
+
+            <div>
+              <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-charcoal-500">
+                What to bring
+              </h2>
+              <p className="mt-3 text-ink-muted">Water, and a mat if you have one.</p>
+            </div>
+
+            <div>
+              <h2 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-charcoal-500">
+                What happens after you send this
+              </h2>
+              <p className="mt-3 text-ink-muted">
+                You&rsquo;ll get an email confirming we received your enquiry. Someone from the team then
+                replies personally with availability and next steps for a first session.
+              </p>
+            </div>
           </aside>
         </div>
 
         {address?.mapEmbedUrl ? (
-          <div className="mt-16 overflow-hidden rounded-2xl border border-charcoal-900/10">
+          <div className="mt-16 overflow-hidden rounded-xl border border-cream-300">
             <iframe
               src={address.mapEmbedUrl}
               title={`Map showing ${siteConfig.name} training location`}

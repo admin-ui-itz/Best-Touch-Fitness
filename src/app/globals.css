@@ -1,52 +1,62 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Provisional design system (no client branding supplied yet).
-   Charcoal + warm white + a restrained electric-lime accent.
-   Contrast notes:
-   - lime-400 text on charcoal-900: ~14:1
-   - charcoal-900 text on lime-400: ~14:1
-   - ink-muted on cream-100: ~5.8:1
-   - lime is never used as text on light backgrounds (fails contrast).
+   Logo-led design system: soft black, warm white, brand red.
+   Contrast notes (WCAG relative-luminance, checked against the actual values
+   below, not eyeballed):
+   - brand-600 (#C31824) white text: ~6.0:1  -> safe for button labels
+   - brand-500 (#E52330) white text: ~4.6:1  -> passes AA but tight, so
+     brand-500 is used for icons/underlines/focus rings/small highlights
+     (3:1 "non-text" requirement) rather than for text-bearing button fills
+   - ink (#202020) on cream-100 (#F7F7F4): ~15.8:1
+   - ink-on-dark-muted (#B3B3B3) on charcoal-900 (#111111): ~9:1
+   - brand-500 focus outline vs charcoal-900 and vs cream-100: both >3:1
 --------------------------------------------------------------------------- */
 @theme {
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-archivo), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
-  --color-charcoal-950: #0d0e10;
-  --color-charcoal-900: #17181b;
-  --color-charcoal-800: #212327;
-  --color-charcoal-700: #2e3136;
-  --color-charcoal-600: #4a4e55;
-  --color-charcoal-500: #6b7079;
+  /* Soft black -> grey ramp, anchored at the brief's #111111. */
+  --color-charcoal-950: #0a0a0a;
+  --color-charcoal-900: #111111;
+  --color-charcoal-800: #1e1e1e;
+  --color-charcoal-700: #2e2e2e;
+  --color-charcoal-600: #545454;
+  --color-charcoal-500: #7a7a7a;
 
-  --color-cream-50: #fcfaf6;
-  --color-cream-100: #f6f2ea;
-  --color-cream-200: #ece6da;
-  --color-cream-300: #d8d0c0;
-  --color-cream-400: #b9b0a0;
+  /* Warm white / white / light-grey-border family. */
+  --color-cream-50: #ffffff;
+  --color-cream-100: #f7f7f4;
+  --color-cream-200: #efefec;
+  --color-cream-300: #dedede;
+  --color-cream-400: #a8a8a4;
 
-  --color-lime-300: #dbf76a;
-  --color-lime-400: #c8ef3a;
-  --color-lime-500: #b4dc1f;
-  --color-lime-600: #8fb60c;
-  --color-lime-700: #5f7a05;
+  /* Brand red, sampled from the supplied logo and refined for contrast.
+     brand-500 is the literal brand red (#E52330); brand-600/700 are
+     darker working shades for text-bearing button fills, where 4.5:1 is
+     required rather than the 3:1 that applies to icons/rings/underlines. */
+  --color-brand-300: #f6c4c7;
+  --color-brand-400: #ee848a;
+  --color-brand-500: #e52330;
+  --color-brand-600: #c31824;
+  --color-brand-700: #8f0f18;
 
-  --color-ink: #17181b;
-  --color-ink-muted: #5b6069;
-  --color-ink-on-dark: #f6f2ea;
-  --color-ink-on-dark-muted: #b9bcc4;
+  --color-ink: #202020;
+  --color-ink-muted: #5c5c5c;
+  --color-ink-on-dark: #f7f7f4;
+  --color-ink-on-dark-muted: #b3b3b3;
 
   --color-danger: #b42318;
   --color-danger-soft: #fee4e2;
   --color-success: #067647;
   --color-success-soft: #dcfae6;
 
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
+  --radius-2xl: 1.25rem;
 
-  --shadow-soft: 0 1px 2px rgb(13 14 16 / 0.06), 0 12px 32px -12px rgb(13 14 16 / 0.18);
-  --shadow-lift: 0 2px 4px rgb(13 14 16 / 0.08), 0 24px 48px -16px rgb(13 14 16 / 0.28);
+  --shadow-soft: 0 1px 2px rgb(17 17 17 / 0.06), 0 12px 32px -12px rgb(17 17 17 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(17 17 17 / 0.08), 0 24px 48px -16px rgb(17 17 17 / 0.28);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -77,19 +87,17 @@
     @apply text-pretty;
   }
 
-  /* Global, visible focus indicator. Works on light and dark surfaces. */
+  /* Global, visible focus indicator. Works on light and dark surfaces:
+     brand-500 clears the 3:1 non-text contrast minimum against both
+     charcoal-900 and cream-100 (see contrast notes above). */
   :focus-visible {
-    outline: 3px solid var(--color-lime-500);
+    outline: 3px solid var(--color-brand-500);
     outline-offset: 3px;
     border-radius: 2px;
   }
 
-  .dark-surface :focus-visible {
-    outline-color: var(--color-lime-400);
-  }
-
   ::selection {
-    background: var(--color-lime-400);
+    background: var(--color-brand-300);
     color: var(--color-charcoal-900);
   }
 
@@ -118,11 +126,7 @@
 
   .eyebrow::before {
     content: "";
-    @apply inline-block h-2 w-2 rounded-full bg-lime-500;
-  }
-
-  .dark-surface .eyebrow::before {
-    @apply bg-lime-400;
+    @apply inline-block h-2 w-2 rounded-full bg-brand-500;
   }
 
   .prose-gym {
@@ -133,9 +137,10 @@
     @apply text-ink-on-dark-muted;
   }
 
-  /* Buttons ------------------------------------------------------------- */
+  /* Buttons ---------------------------------------------------------------
+     Restrained corner rounding rather than pill shapes, per brand direction. */
   .btn {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 font-display text-sm font-bold uppercase tracking-wider transition-[transform,background-color,color,box-shadow] duration-200 select-none;
+    @apply inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-6 py-3 font-display text-sm font-bold uppercase tracking-wider transition-[transform,background-color,color,box-shadow,border-color] duration-200 select-none;
     transition-timing-function: var(--ease-out-soft);
   }
 
@@ -148,8 +153,11 @@
     @apply cursor-not-allowed opacity-60;
   }
 
+  /* brand-600, not brand-500: this fill carries white text, which needs
+     the 4.5:1 text-contrast minimum (brand-600 gives ~6:1; brand-500
+     alone gives ~4.6:1, too tight to rely on). */
   .btn-primary {
-    @apply bg-lime-400 text-charcoal-900 shadow-soft hover:bg-lime-300 hover:shadow-lift;
+    @apply bg-brand-600 text-white shadow-soft hover:bg-brand-700 hover:shadow-lift;
   }
 
   .btn-secondary {
@@ -178,7 +186,7 @@
   }
 
   .field-input {
-    @apply block w-full rounded-xl border border-charcoal-900/20 bg-cream-50 px-4 py-3 text-base text-ink placeholder:text-charcoal-500 focus-visible:border-charcoal-900 focus-visible:outline-lime-500;
+    @apply block w-full rounded-lg border border-cream-300 bg-cream-50 px-4 py-3 text-base text-ink placeholder:text-charcoal-500 focus-visible:border-charcoal-900 focus-visible:outline-brand-500;
     min-height: 3rem;
   }
 
@@ -196,7 +204,7 @@
 
   /* Photo frames --------------------------------------------------------- */
   .photo-frame {
-    @apply relative overflow-hidden rounded-2xl bg-charcoal-800;
+    @apply relative overflow-hidden rounded-xl bg-charcoal-800;
   }
 
   .photo-frame img {
@@ -205,14 +213,15 @@
 }
 
 @layer utilities {
-  /* Entrance transitions. Hidden state only applies once JS is confirmed
-     (html[data-js]) so content is never invisible without JavaScript. */
+  /* Entrance transitions: opacity + a small upward shift, ~500ms.
+     Hidden state only applies once JS is confirmed (html[data-js]) so
+     content is never invisible without JavaScript. */
   html[data-js] [data-reveal] {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(16px);
     transition:
-      opacity 0.7s var(--ease-out-soft),
-      transform 0.7s var(--ease-out-soft);
+      opacity 0.5s var(--ease-out-soft),
+      transform 0.5s var(--ease-out-soft);
     transition-delay: var(--reveal-delay, 0ms);
   }
 

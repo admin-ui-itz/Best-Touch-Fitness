@@ -1,54 +1,57 @@
+import Image from "next/image";
 import Link from "next/link";
 
-import { HeroAccent } from "@/components/three/hero-accent";
-import { PhotoFigure } from "@/components/ui/photo-figure";
-import { heroPhoto } from "@/config/photos";
-import { siteConfig } from "@/config/site";
+import { photos } from "@/config/photos";
 
+/**
+ * Full-bleed photographic hero. Uses a real class photo (not the stock
+ * reference set) so the very first thing a visitor sees is genuine — the
+ * cinematic scroll section further down carries the polished aspirational
+ * footage instead. A restrained dark gradient keeps the headline readable
+ * without hiding faces or shifting skin tones.
+ */
 export function Hero() {
+  const photo = photos.gobletSquatHoldInstructor;
   return (
-    <section className="dark-surface relative overflow-hidden bg-charcoal-900 text-cream-100">
-      {/* soft lime wash, kept subtle */}
+    <section className="dark-surface relative flex min-h-[34rem] items-end overflow-hidden bg-charcoal-900 sm:min-h-[42rem] lg:min-h-[46rem]">
+      <Image
+        src={photo.src}
+        alt=""
+        fill
+        priority
+        fetchPriority="high"
+        sizes="100vw"
+        placeholder="blur"
+        quality={80}
+        className="object-cover"
+        style={{ objectPosition: photo.focus }}
+      />
+      {/* Restrained dark gradient: strongest low (behind the headline/CTAs),
+          fading out toward the top so the photo itself stays the focus. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 right-[-10%] h-[36rem] w-[36rem] rounded-full bg-lime-400/10 blur-3xl"
+        className="absolute inset-0 bg-gradient-to-t from-charcoal-950/90 via-charcoal-950/35 to-charcoal-950/10"
       />
-      <div className="container-x relative pt-14 pb-10 sm:pt-20 lg:pt-24">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
-          <div className="max-w-3xl">
-            <p className="eyebrow text-lime-400">Outdoor group training</p>
-            <h1 className="mt-5 text-[2.75rem] leading-[0.98] sm:text-6xl lg:text-7xl">
-              Get stronger.
-              <br />
-              Move better.
-              <br />
-              <span className="text-lime-400">Find your community.</span>
-            </h1>
-            <p className="mt-6 max-w-xl text-lg text-ink-on-dark-muted sm:text-xl">
-              {siteConfig.description}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/classes" className="btn btn-primary">
-                Find your class
-              </Link>
-              <Link href="/contact" className="btn btn-secondary">
-                Enquire about joining
-              </Link>
-            </div>
+
+      <div className="container-x relative py-10 sm:py-14 lg:py-16">
+        <div className="max-w-2xl">
+          <p className="eyebrow text-brand-400">Outdoor group training</p>
+          <h1 className="mt-4 text-4xl leading-[1.03] text-white sm:text-6xl lg:text-7xl">
+            Get stronger. Together.
+          </h1>
+          <p className="mt-5 max-w-xl text-lg text-ink-on-dark-muted sm:text-xl">
+            Outdoor group training, supportive coaching and a community that helps you keep showing
+            up.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/contact" className="btn btn-primary">
+              Find my first class
+            </Link>
+            <Link href="/classes" className="btn btn-secondary">
+              Explore classes
+            </Link>
           </div>
-
-          {/* 3D accent: desktop only; static illustration everywhere else. */}
-          <HeroAccent className="mx-auto hidden aspect-square w-full max-w-[22rem] lg:block" />
         </div>
-
-        <PhotoFigure
-          photo={heroPhoto}
-          priority
-          aspect="aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2000/924]"
-          sizes="(min-width: 1280px) 1216px, 100vw"
-          className="mt-12 shadow-lift sm:mt-16"
-          caption="Outdoor group training, under the tent, every session."
-        />
       </div>
     </section>
   );

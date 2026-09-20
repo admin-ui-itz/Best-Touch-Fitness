@@ -14,11 +14,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const session = await getAdminSession();
   return (
     <>
-      <header className="border-b border-charcoal-900/10 bg-cream-50">
+      <header className="border-b border-cream-300 bg-cream-50">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Logo />
-            <span className="rounded-full bg-charcoal-900 px-2.5 py-0.5 font-display text-[11px] font-bold uppercase tracking-wider text-lime-400">
+            <span className="rounded-full bg-charcoal-900 px-2.5 py-0.5 font-display text-[11px] font-bold uppercase tracking-wider text-brand-400">
               Admin
             </span>
           </div>
