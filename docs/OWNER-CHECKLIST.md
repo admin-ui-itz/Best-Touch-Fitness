@@ -39,11 +39,11 @@ Nothing on the live site is invented. Every item below is currently **hidden** o
 
 ## 5. Accounts and services we need access to (see docs/DEPLOYMENT.md)
 
-- **Supabase** project (database and admin sign-in). We create the admin user for you; there is no public sign-up.
-- **Brevo** account with a **verified sender** (the address enquiry emails come from) and the email address that should receive new-enquiry notifications.
+- **Supabase**: **done** — project created, both migrations applied, admin account created and granted access. Verified end-to-end (a real test enquiry was submitted and confirmed stored, then removed).
+- **Brevo**: **done for now** — API key generated, sender `paschalagency@gmail.com` verified and working (confirmed via a real test send: both the acknowledgement and owner-notification emails delivered with real message IDs). `ENQUIRY_NOTIFY_EMAIL` is temporarily set to that same address; **swap it to the real owner inbox whenever you have it** (just an env var, one-line change). Consider also verifying a branded sender (e.g. `hello@besttouchfitness.com`) once the domain's DNS is set up — see `docs/DEPLOYMENT.md` section 5.
 - **Domain**: confirmed as managed in AWS Route 53. We need either the Route 53 hosted zone ID (to add two DNS records) or someone with console access to add them. Also tell us about any existing email on the domain so we do not disturb it.
 - **GitHub**: code lives at [github.com/admin-ui-itz/Best-Touch-Fitness](https://github.com/admin-ui-itz/Best-Touch-Fitness) (confirmed, access granted).
-- **Netlify**: connect that GitHub repo to your Netlify account via Netlify's "Import from Git" flow, or issue a scoped personal access token — see `docs/DEPLOYMENT.md` section 1. We never ask for or accept an account password.
+- **Netlify**: connect that GitHub repo to your Netlify account via Netlify's "Import from Git" flow, or issue a scoped personal access token — see `docs/DEPLOYMENT.md` section 1. We never ask for or accept an account password. **Note:** Supabase and Brevo credentials above are currently only in local `.env.local` (gitignored, never committed) — they still need to be added to Netlify's environment variables before the live site will work.
 
 ## 6. Things we will never add without your say-so
 
