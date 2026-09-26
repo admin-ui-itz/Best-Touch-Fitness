@@ -6,204 +6,316 @@ import { useEffect, useRef, useState } from "react";
 
 import { scrollStory } from "@/config/video";
 
+type Mode = "loading" | "scrub" | "play" | "static";
+
+const chapters = scrollStory.chapters;
+const lastIndex = chapters.length - 1;
+/** Share of the scroll spent expanding the inset frame to full-bleed before scrubbing starts. */
+const INTRO = 0.1;
+
+const clamp = (v: number, min = 0, max = 1) => Math.min(max, Math.max(min, v));
+
+function chapterAt(time: number) {
+  let index = 0;
+  chapters.forEach((c, i) => {
+    if (time >= c.start) index = i;
+  });
+  return index;
+}
+
 /**
- * Cinematic scroll-controlled video section.
+ * Cinematic, chapter-driven video section.
  *
- * Desktop-only scroll-scrub experience: a sticky video viewport whose
- * playback position is driven by how far the visitor has scrolled through a
- * tall wrapper section (native scrolling throughout — nothing is pinned by
- * JS beyond CSS `position: sticky`, and there is no scroll hijacking). The
- * three text beats cross-fade in step with the same scroll progress, each
- * owning roughly a third of the section, so they track the video's own
- * pullback-reveal arc rather than all appearing at once.
- *
- * Everywhere else — mobile, tablets, reduced-motion, Save-Data/slow
- * connections, or if the video simply fails to load — falls back to a
- * static composition: the poster frame with all three beats shown together
- * and the same call to action, so the message and the CTA are never lost.
+ * - "scrub" (wide screens, fine pointer): a tall section with a sticky stage.
+ *   The first slice of scroll grows the video from an inset frame to
+ *   full-bleed; the rest drives the playhead, so each scene cut lands with its
+ *   own headline. Native scrolling throughout — only CSS `position: sticky`,
+ *   no scroll hijacking.
+ * - "play" (phones/tablets): the same stage and chapter UI, but the clip
+ *   autoplays muted on loop and chapters follow the playhead. Scroll-scrubbing
+ *   on touch devices is unreliable, so we don't fake it there.
+ * - "static" (reduced motion, Save-Data, slow connections, or a failed load):
+ *   the poster frame with every chapter listed and the same CTA.
  */
 export function ScrollStory() {
-  const [mode, setMode] = useState<"loading" | "scrub" | "static">("loading");
+  const [mode, setMode] = useState<Mode>("loading");
+  const [active, setActive] = useState(0);
+  const [failed, setFailed] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const beatRefs = useRef<Array<HTMLParagraphElement | null>>([]);
-  const rafRef = useRef<number | null>(null);
-  const [videoFailed, setVideoFailed] = useState(false);
+  const railRefs = useRef<Array<HTMLSpanElement | null>>([]);
 
-  // Decide the experience once, on mount: scroll-scrub only for wide,
-  // motion-tolerant, non-constrained connections. Deferred a tick (rather
-  // than set synchronously in the effect body) to avoid an immediate
-  // cascading render right after mount.
+  // Decide the experience once, on mount (deferred a tick to avoid a
+  // cascading render straight after hydration).
   useEffect(() => {
     const id = window.setTimeout(() => {
-      const wide = window.matchMedia("(min-width: 1024px)").matches;
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const mq = (q: string) => window.matchMedia(q).matches;
       const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } })
         .connection;
-      const constrained = Boolean(connection?.saveData) || ["slow-2g", "2g"].includes(connection?.effectiveType ?? "");
-      setMode(wide && !reducedMotion && !constrained ? "scrub" : "static");
+      const constrained =
+        Boolean(connection?.saveData) || ["slow-2g", "2g"].includes(connection?.effectiveType ?? "");
+      if (mq("(prefers-reduced-motion: reduce)") || constrained) setMode("static");
+      else if (mq("(min-width: 1024px) and (pointer: fine)")) setMode("scrub");
+      else setMode("play");
     }, 0);
     return () => window.clearTimeout(id);
   }, []);
 
-  // Lazy-load the actual video once the section is nearly in view, and only
-  // in scrub mode (the static mode only ever needs the poster image).
+  // Lazy-load the clip only once the section is close to the viewport.
   useEffect(() => {
-    if (mode !== "scrub") return;
+    if (mode !== "scrub" && mode !== "play") return;
     const section = sectionRef.current;
     const video = videoRef.current;
     if (!section || !video) return;
-
     const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            video.preload = "auto";
-            video.load();
-            io.disconnect();
-          }
-        }
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        video.preload = "auto";
+        video.load();
+        if (mode === "play") void video.play().catch(() => undefined);
+        io.disconnect();
       },
-      { rootMargin: "600px 0px" },
+      { rootMargin: "800px 0px" },
     );
     io.observe(section);
     return () => io.disconnect();
   }, [mode]);
 
-  // Drive playback position and beat opacity from scroll progress through
-  // the section. Writes go straight to element styles (not React state) so
-  // this stays smooth at scroll/frame rate without re-rendering.
+  // Scrub mode: scroll position -> frame inset, playhead, chapter and rail.
+  // Per-frame writes go straight to styles; React state only changes when the
+  // chapter does.
   useEffect(() => {
-    if (mode !== "scrub" || videoFailed) return;
+    if (mode !== "scrub" || failed) return;
     const section = sectionRef.current;
+    const frame = frameRef.current;
     const video = videoRef.current;
-    if (!section || !video) return;
+    if (!section || !frame || !video) return;
 
+    let raf = 0;
     let seeking = false;
-    let ready = false;
-    const onLoaded = () => {
-      ready = true;
-    };
-    video.addEventListener("loadedmetadata", onLoaded);
-
-    const beatCount = scrollStory.beats.length;
-    const update = () => {
-      rafRef.current = null;
-      const rect = section.getBoundingClientRect();
-      const scrollable = rect.height - window.innerHeight;
-      const progress = scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
-
-      if (ready && !seeking) {
-        const duration = video.duration || scrollStory.durationSeconds;
-        const target = progress * duration;
-        // Avoid overlapping seeks: only issue a new one once the previous
-        // completes, and skip sub-frame-sized changes.
-        if (Math.abs(video.currentTime - target) > 0.03) {
-          seeking = true;
-          video.currentTime = target;
-        }
-      }
-
-      // Each beat "owns" a third of the scroll with a soft crossfade at the
-      // edges, so the text tracks the pullback reveal rather than jump-cutting.
-      beatRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const center = (i + 0.5) / beatCount;
-        const distance = Math.abs(progress - center) * beatCount;
-        const opacity = Math.max(0, 1 - distance * 1.15);
-        el.style.opacity = String(opacity);
-        el.style.transform = `translateY(${(1 - opacity) * 10}px)`;
-      });
-
-      rafRef.current = requestAnimationFrame(update);
-    };
+    let smoothed = 0;
+    const duration = () => (Number.isFinite(video.duration) && video.duration) || scrollStory.durationSeconds;
     const onSeeked = () => {
       seeking = false;
     };
-    video.addEventListener("seeked", onSeeked);
-    const onError = () => setVideoFailed(true);
-    video.addEventListener("error", onError);
-
-    rafRef.current = requestAnimationFrame(update);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      video.removeEventListener("loadedmetadata", onLoaded);
-      video.removeEventListener("seeked", onSeeked);
-      video.removeEventListener("error", onError);
+    // A never-seeked video keeps showing its poster; nudge it onto a real
+    // frame as soon as data arrives so the opening scene is frame 0.
+    const onLoaded = () => {
+      if (video.currentTime === 0) video.currentTime = 0.001;
     };
-  }, [mode, videoFailed]);
+    video.addEventListener("seeked", onSeeked);
+    video.addEventListener("loadeddata", onLoaded);
 
-  const showStaticFallback = mode === "static" || mode === "loading" || videoFailed;
+    const tick = () => {
+      const rect = section.getBoundingClientRect();
+      const scrollable = rect.height - window.innerHeight;
+      const progress = scrollable > 0 ? clamp(-rect.top / scrollable) : 0;
+
+      // Intro: inset frame opens up to full-bleed (eased).
+      const open = 1 - Math.pow(1 - clamp(progress / INTRO), 3);
+      const inset = (1 - open) * 9;
+      frame.style.clipPath = `inset(${inset}% ${inset * 1.6}% round ${(1 - open) * 6}px)`;
+      frame.style.transform = `scale(${1.06 - open * 0.06})`;
+
+      // Playhead: lerp toward the target so wheel steps glide rather than jump.
+      const target = clamp((progress - INTRO) / (1 - INTRO)) * duration();
+      smoothed += (target - smoothed) * 0.2;
+      if (Math.abs(target - smoothed) < 0.002) smoothed = target;
+      if (video.readyState >= 1 && !seeking && Math.abs(video.currentTime - smoothed) > 1 / 60) {
+        seeking = true;
+        video.currentTime = smoothed;
+      }
+
+      setActive(chapterAt(smoothed));
+      chapters.forEach((c, i) => {
+        const el = railRefs.current[i];
+        if (!el) return;
+        const end = chapters[i + 1]?.start ?? duration();
+        el.style.transform = `scaleY(${clamp((smoothed - c.start) / (end - c.start))})`;
+      });
+
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      video.removeEventListener("seeked", onSeeked);
+      video.removeEventListener("loadeddata", onLoaded);
+    };
+  }, [mode, failed]);
+
+  // Play mode: chapters and rail follow the looping playhead.
+  useEffect(() => {
+    if (mode !== "play" || failed) return;
+    const video = videoRef.current;
+    if (!video) return;
+    // Prefer per-decoded-frame callbacks so headlines land exactly on the
+    // cuts; fall back to rAF where requestVideoFrameCallback is missing.
+    const perFrame = "requestVideoFrameCallback" in video;
+    let handle = 0;
+    const schedule = () => {
+      handle = perFrame ? video.requestVideoFrameCallback(tick) : requestAnimationFrame(tick);
+    };
+    const tick = () => {
+      const t = video.currentTime;
+      setActive(chapterAt(t));
+      chapters.forEach((c, i) => {
+        const el = railRefs.current[i];
+        if (!el) return;
+        const end = chapters[i + 1]?.start ?? scrollStory.durationSeconds;
+        el.style.transform = `scaleY(${clamp((t - c.start) / (end - c.start))})`;
+      });
+      schedule();
+    };
+    schedule();
+    return () => {
+      if (perFrame) video.cancelVideoFrameCallback(handle);
+      else cancelAnimationFrame(handle);
+    };
+  }, [mode, failed]);
+
+  const animated = (mode === "scrub" || mode === "play") && !failed;
+  const isScrub = mode === "scrub" && !failed;
 
   return (
     <section
       ref={sectionRef}
-      aria-label="Our approach, in motion"
-      style={mode === "scrub" ? { height: "280vh" } : undefined}
+      aria-labelledby="story-heading"
+      className="dark-surface relative bg-charcoal-950"
+      style={isScrub ? { height: `${chapters.length * 90 + 60}vh` } : undefined}
     >
+      <h2 id="story-heading" className="sr-only">
+        How we train
+      </h2>
+
       <div
         className={
-          mode === "scrub"
+          isScrub
             ? "sticky top-0 h-screen w-full overflow-hidden"
-            : "relative aspect-[16/9] w-full overflow-hidden sm:aspect-[21/9]"
+            : "relative h-[88svh] min-h-[34rem] w-full overflow-hidden"
         }
       >
-        {/* Poster: always rendered first/underneath so there is never a gap. */}
-        <Image
-          src={scrollStory.posterSrc}
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover"
-          style={{ opacity: showStaticFallback ? 1 : 0, transition: "opacity 300ms" }}
-        />
-
-        {!showStaticFallback ? (
-          <video
-            ref={videoRef}
-            muted
-            playsInline
-            preload="none"
-            poster={scrollStory.posterSrc}
+        <div ref={frameRef} className="absolute inset-0 overflow-hidden will-change-[clip-path,transform]">
+          <Image
+            src={scrollStory.posterSrc}
+            alt=""
+            fill
+            sizes="100vw"
+            className={`object-cover transition-opacity duration-500 ${isScrub ? "opacity-0" : ""}`}
+          />
+          {animated ? (
+            <video
+              ref={videoRef}
+              muted
+              playsInline
+              loop={mode === "play"}
+              preload="none"
+              // Scrub mode opens on frame 0, not the closing-shot poster.
+              poster={mode === "play" ? scrollStory.posterSrc : undefined}
+              aria-hidden="true"
+              onError={() => setFailed(true)}
+              className="absolute inset-0 h-full w-full object-cover"
+            >
+              <source src={scrollStory.videoSrc} type="video/mp4" />
+            </video>
+          ) : null}
+          <div
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover"
-          >
-            <source src={scrollStory.videoSrc} type="video/mp4" />
-          </video>
-        ) : null}
+            className="absolute inset-0 bg-[linear-gradient(90deg,rgb(10_10_10/0.8)_0%,rgb(10_10_10/0.35)_45%,transparent_75%),linear-gradient(0deg,rgb(10_10_10/0.85)_0%,transparent_45%)]"
+          />
+        </div>
 
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-charcoal-950/75 via-charcoal-950/10 to-charcoal-950/40"
-          aria-hidden="true"
-        />
-
-        <div className="relative flex h-full flex-col justify-end px-4 pb-16 sm:px-8 sm:pb-20 lg:px-16">
-          <div className="dark-surface max-w-xl">
-            <h2 className="sr-only">Our approach</h2>
-            <div className={mode === "scrub" ? "relative h-[3.5em] sm:h-[2.4em]" : "space-y-2"}>
-              {scrollStory.beats.map((beat, i) => (
-                <p
-                  key={beat}
-                  ref={(el) => {
-                    beatRefs.current[i] = el;
-                  }}
-                  className={
-                    mode === "scrub"
-                      ? "absolute inset-0 font-display text-3xl font-extrabold text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] sm:text-4xl lg:text-5xl"
-                      : "font-display text-2xl font-extrabold text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] sm:text-3xl"
-                  }
+        {animated ? (
+          <>
+            {/* Chapter headlines: one visible at a time, wiping up as the scene changes. */}
+            <div className="absolute inset-x-0 bottom-0 pb-24 sm:pb-20">
+              <div className="container-x">
+                <div className="relative h-[10rem] sm:h-[12rem] lg:h-[13rem]" aria-live="polite">
+                  {chapters.map((c, i) => (
+                    <div
+                      key={c.title}
+                      data-active={i === active}
+                      aria-hidden={i !== active}
+                      className="story-chapter absolute inset-x-0 bottom-0"
+                    >
+                      <p className="flex items-center gap-3 font-display text-xs font-bold uppercase tracking-[0.24em] text-brand-400">
+                        <span className="text-white">{String(i + 1).padStart(2, "0")}</span>
+                        <span aria-hidden="true" className="h-0.5 w-8 bg-brand-500" />
+                        {c.label}
+                      </p>
+                      <p className="display-condensed mt-3 text-6xl text-white sm:text-8xl lg:text-[9rem]">
+                        {c.title}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div
+                  className={`mt-6 flex flex-wrap gap-3 transition-[opacity,transform] duration-500 ${
+                    active === lastIndex ? "opacity-100" : "pointer-events-none translate-y-3 opacity-0"
+                  }`}
+                  aria-hidden={active !== lastIndex}
                 >
-                  {beat}
-                </p>
-              ))}
+                  <Link href="/contact" className="btn btn-primary" tabIndex={active === lastIndex ? 0 : -1}>
+                    Find my first class
+                  </Link>
+                  <Link href="/classes" className="btn btn-secondary" tabIndex={active === lastIndex ? 0 : -1}>
+                    Explore classes
+                  </Link>
+                </div>
+              </div>
             </div>
-            <div className="pt-6">
-              <Link href="/classes" className="btn btn-primary">
-                Explore classes
-              </Link>
+
+            {/* Progress rail: one segment per scene. */}
+            <ol
+              aria-hidden="true"
+              className="absolute top-1/2 right-4 flex -translate-y-1/2 flex-col gap-2 [text-shadow:0_1px_10px_rgb(0_0_0/0.7)] sm:right-8 lg:right-12"
+            >
+              {chapters.map((c, i) => (
+                <li key={c.title} className="flex items-center justify-end gap-3">
+                  <span
+                    className={`hidden font-display text-[11px] font-bold uppercase tracking-[0.2em] transition-colors duration-300 lg:block ${
+                      i === active ? "text-white" : "text-white/35"
+                    }`}
+                  >
+                    {c.label}
+                  </span>
+                  <span className="relative block h-10 w-[3px] overflow-hidden bg-white/20">
+                    <span
+                      ref={(el) => {
+                        railRefs.current[i] = el;
+                      }}
+                      className="absolute inset-0 origin-top scale-y-0 bg-brand-500"
+                    />
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </>
+        ) : (
+          <div className="absolute inset-x-0 bottom-0 pb-16">
+            <div className="container-x">
+              <ol className="space-y-1">
+                {chapters.map((c, i) => (
+                  <li key={c.title} className="display-condensed text-4xl text-white sm:text-6xl">
+                    <span className="mr-3 align-middle font-display text-xs font-bold tracking-[0.24em] text-brand-400">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {c.title}
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/contact" className="btn btn-primary">
+                  Find my first class
+                </Link>
+                <Link href="/classes" className="btn btn-secondary">
+                  Explore classes
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

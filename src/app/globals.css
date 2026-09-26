@@ -15,6 +15,8 @@
 @theme {
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-archivo), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  /* Headlines only: tall condensed caps. Archivo stays for labels/buttons. */
+  --font-condensed: var(--font-bebas), "Arial Narrow", var(--font-archivo), sans-serif;
 
   /* Soft black -> grey ramp, anchored at the brief's #111111. */
   --color-charcoal-950: #0a0a0a;
@@ -51,9 +53,10 @@
   --color-success: #067647;
   --color-success-soft: #dcfae6;
 
-  --radius-lg: 0.625rem;
-  --radius-xl: 0.875rem;
-  --radius-2xl: 1.25rem;
+  /* Hard, athletic edges (UFC GYM-style) rather than soft rounded cards. */
+  --radius-lg: 2px;
+  --radius-xl: 3px;
+  --radius-2xl: 4px;
 
   --shadow-soft: 0 1px 2px rgb(17 17 17 / 0.06), 0 12px 32px -12px rgb(17 17 17 / 0.18);
   --shadow-lift: 0 2px 4px rgb(17 17 17 / 0.08), 0 24px 48px -16px rgb(17 17 17 / 0.28);
@@ -76,11 +79,14 @@
     font-feature-settings: "ss01", "cv11";
   }
 
+  /* Headlines: tall condensed caps (Bebas Neue) — the sports-brand voice. */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display font-extrabold tracking-tight text-balance;
+    @apply font-condensed font-normal uppercase text-balance;
+    letter-spacing: 0.005em;
+    line-height: 0.9;
   }
 
   p {
@@ -126,7 +132,69 @@
 
   .eyebrow::before {
     content: "";
-    @apply inline-block h-2 w-2 rounded-full bg-brand-500;
+    @apply inline-block h-0.5 w-7 bg-brand-500;
+  }
+
+  /* Condensed display face for non-heading elements (chapter titles etc.). */
+  .display-condensed {
+    @apply font-condensed font-normal uppercase;
+    letter-spacing: 0.005em;
+    line-height: 0.9;
+  }
+
+  /* Signature angled red bar under a word — the brand's answer to UFC GYM's
+     struck-through hero type (a strike would read as negation here). Wrap one word: <span class="slash">...</span>. */
+  .slash {
+    @apply relative isolate inline-block;
+  }
+
+  .slash::after {
+    content: "";
+    @apply absolute top-[88%] right-[-2%] left-[-2%] -z-10 h-[0.09em] bg-brand-500;
+    transform: rotate(-4deg) scaleX(0);
+    transform-origin: left center;
+    animation: slash-in 0.7s 0.5s var(--ease-out-soft) forwards;
+  }
+
+  @keyframes slash-in {
+    to {
+      transform: rotate(-4deg) scaleX(1);
+    }
+  }
+
+  /* Arrow text link ("FIND OUT MORE →"), arrow nudges on hover. */
+  .link-arrow {
+    @apply inline-flex items-center gap-2 font-display text-sm font-bold uppercase tracking-[0.16em] text-charcoal-900 transition-colors hover:text-brand-600;
+  }
+
+  .link-arrow::after {
+    content: "→";
+    @apply text-brand-500 transition-transform duration-200;
+  }
+
+  .link-arrow:hover::after {
+    transform: translateX(4px);
+  }
+
+  .dark-surface .link-arrow {
+    @apply text-cream-100 hover:text-brand-400;
+  }
+
+  /* Scroll-story chapter headline: wipes up into place when active. */
+  .story-chapter {
+    opacity: 0;
+    transform: translateY(24px);
+    clip-path: inset(0 0 100% 0);
+    transition:
+      opacity 0.35s var(--ease-out-soft),
+      transform 0.6s var(--ease-out-soft),
+      clip-path 0.6s var(--ease-out-soft);
+  }
+
+  .story-chapter[data-active="true"] {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(-10% 0 -10% 0);
   }
 
   .prose-gym {
@@ -140,7 +208,7 @@
   /* Buttons ---------------------------------------------------------------
      Restrained corner rounding rather than pill shapes, per brand direction. */
   .btn {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-6 py-3 font-display text-sm font-bold uppercase tracking-wider transition-[transform,background-color,color,box-shadow,border-color] duration-200 select-none;
+    @apply inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-none px-7 py-3 font-display text-sm font-extrabold uppercase tracking-[0.16em] transition-[transform,background-color,color,box-shadow,border-color] duration-200 select-none;
     transition-timing-function: var(--ease-out-soft);
   }
 
@@ -157,7 +225,7 @@
      the 4.5:1 text-contrast minimum (brand-600 gives ~6:1; brand-500
      alone gives ~4.6:1, too tight to rely on). */
   .btn-primary {
-    @apply bg-brand-600 text-white shadow-soft hover:bg-brand-700 hover:shadow-lift;
+    @apply bg-brand-600 text-white hover:bg-brand-700;
   }
 
   .btn-secondary {

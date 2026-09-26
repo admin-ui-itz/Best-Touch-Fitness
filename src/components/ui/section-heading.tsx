@@ -27,8 +27,8 @@ export function SectionHeading({
         id={id}
         className={
           Tag === "h1"
-            ? "text-4xl leading-[1.02] sm:text-5xl lg:text-6xl"
-            : "text-3xl leading-[1.05] sm:text-4xl lg:text-5xl"
+            ? "text-6xl sm:text-7xl lg:text-8xl"
+            : "text-5xl sm:text-6xl lg:text-7xl"
         }
       >
         {title}

@@ -19,16 +19,19 @@ export function CoachSection() {
   if (trainers.length === 0) {
     return (
       <section className="container-x py-20 sm:py-28" aria-labelledby="coach-heading">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          <Reveal>
+        {/* Mirror of the nutrition panel: photo right, card overlapping from the left. */}
+        <div className="grid lg:grid-cols-12 lg:items-center">
+          <Reveal className="lg:col-span-8 lg:col-start-5 lg:row-start-1">
             <PhotoFigure
-              photo={photos.gobletSquatHoldInstructor}
-              aspect="aspect-[4/3]"
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="shadow-soft"
+              photo={photos.groupSquatUnderTent}
+              aspect="aspect-[4/3] lg:aspect-[16/10]"
+              sizes="(min-width: 1024px) 66vw, 100vw"
             />
           </Reveal>
-          <Reveal delay={100}>
+          <Reveal
+            delay={100}
+            className="dark-surface relative z-10 -mt-16 mx-4 border-t-4 border-brand-500 bg-charcoal-950 p-8 text-white shadow-lift sm:mx-10 sm:p-10 lg:col-span-5 lg:col-start-1 lg:row-start-1 lg:mx-0 lg:mt-0"
+          >
             <SectionHeading
               id="coach-heading"
               eyebrow="Meet the coach"
@@ -42,7 +45,7 @@ export function CoachSection() {
                 </p>
               }
             />
-            <Link href="/contact" className="btn btn-primary mt-8">
+            <Link href="/contact" className="link-arrow mt-8">
               Find my first class
             </Link>
           </Reveal>

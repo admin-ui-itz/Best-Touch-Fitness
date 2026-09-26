@@ -62,25 +62,34 @@ export function SiteHeader() {
           scrolled ? "border-b border-cream-300 shadow-soft" : "border-b border-transparent"
         }`}
       >
-        <div className="container-x flex h-16 items-center justify-between gap-4 sm:h-[4.5rem]">
-          <Logo markSize={40} wordmarkClassName="text-lg sm:text-xl" />
+        {/* Full-width bar: logo left, tracked caps nav, and a full-height
+            red CTA block flush to the right edge (UFC GYM's "FREE PASS" slot). */}
+        <div className="flex h-16 items-stretch justify-between gap-4 pl-4 sm:h-[4.5rem] sm:pl-6 lg:pl-8">
+          <div className="flex items-center">
+            <Logo markSize={40} wordmarkClassName="font-condensed! font-normal! tracking-wide! text-[1.65rem] leading-none sm:text-[1.85rem]" />
+          </div>
 
-          <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                aria-current={isActive(link.href) ? "page" : undefined}
-                className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors hover:bg-charcoal-900/5 ${
-                  isActive(link.href)
-                    ? "text-charcoal-900 underline decoration-brand-500 decoration-[3px] underline-offset-8"
-                    : "text-ink-muted"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link href="/contact" className="btn btn-primary btn-sm ml-3">
+          <nav aria-label="Primary" className="hidden items-stretch lg:flex">
+            <div className="flex items-center gap-1 pr-4 lg:gap-2 lg:pr-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  className={`relative px-2.5 py-2 font-display text-[13px] font-extrabold uppercase tracking-[0.16em] transition-colors hover:text-brand-600 lg:px-3 ${
+                    isActive(link.href)
+                      ? "text-charcoal-900 after:absolute after:inset-x-2.5 after:-bottom-0.5 after:h-[3px] after:bg-brand-500 lg:after:inset-x-3"
+                      : "text-charcoal-700"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <Link
+              href="/contact"
+              className="flex items-center bg-brand-600 px-6 font-display text-[13px] font-extrabold uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-700 lg:px-9"
+            >
               Find my first class
             </Link>
           </nav>
@@ -88,7 +97,7 @@ export function SiteHeader() {
           <button
             ref={toggleRef}
             type="button"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg md:hidden"
+            className="inline-flex w-16 items-center justify-center bg-charcoal-900 text-white sm:w-[4.5rem] lg:hidden"
             aria-expanded={open}
             aria-controls={panelId}
             onClick={() => setOpen(!open)}
@@ -108,7 +117,7 @@ export function SiteHeader() {
           </button>
         </div>
 
-        <div id={panelId} hidden={!open} className="border-t border-cream-300 bg-cream-100 md:hidden">
+        <div id={panelId} hidden={!open} className="border-t border-cream-300 bg-cream-100 lg:hidden">
           <nav aria-label="Primary mobile" className="container-x flex flex-col py-3">
             {navLinks.map((link) => (
               <Link

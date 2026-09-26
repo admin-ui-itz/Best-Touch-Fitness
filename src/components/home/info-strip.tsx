@@ -40,19 +40,19 @@ export function InfoStrip() {
   items.push({ label: "New here?", value: "Every class welcomes beginners", href: "/classes" });
 
   return (
-    <div className="border-y border-cream-300 bg-cream-50">
-      <div className="container-x flex flex-wrap items-center gap-x-10 gap-y-3 py-4 text-sm">
+    <div className="dark-surface border-b-4 border-brand-500 bg-charcoal-900 text-cream-100">
+      <div className="container-x flex flex-wrap items-center gap-x-10 gap-y-3 py-5 text-sm">
         {items.map((item) => {
           const content = (
             <>
-              <span className="font-display font-bold uppercase tracking-[0.1em] text-charcoal-500">
+              <span className="font-display font-bold uppercase tracking-[0.16em] text-brand-400">
                 {item.label}
               </span>
-              <span className="ml-2 font-semibold text-charcoal-900">{item.value}</span>
+              <span className="ml-2 font-semibold text-cream-100">{item.value}</span>
             </>
           );
           return item.href ? (
-            <Link key={item.label} href={item.href} className="hover:text-brand-600">
+            <Link key={item.label} href={item.href} className="hover:text-brand-400">
               {content}
             </Link>
           ) : (

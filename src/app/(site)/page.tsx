@@ -58,11 +58,11 @@ export default function HomePage() {
 
           <Reveal
             delay={200}
-            className="mt-14 flex flex-col items-start gap-4 rounded-xl border border-cream-300 bg-cream-50 p-6 sm:flex-row sm:items-center sm:justify-between"
+            className="mt-14 flex flex-col items-start gap-4 border-l-4 border-brand-500 bg-charcoal-950 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8 dark-surface"
           >
             <div>
-              <p className="font-display text-lg font-bold text-charcoal-900">Not sure which class fits?</p>
-              <p className="mt-1 text-ink-muted">Tell us a little about yourself and we will point you to a good first session.</p>
+              <p className="display-condensed text-3xl">Not sure which class fits?</p>
+              <p className="mt-2 text-ink-on-dark-muted">Tell us a little about yourself and we will point you to a good first session.</p>
             </div>
             <Link href="/contact?interest=help-me-choose" className="btn btn-secondary shrink-0">
               Help me choose
@@ -76,10 +76,20 @@ export default function HomePage() {
       <CoachSection />
       <CommunitySection />
 
-      {/* Nutrition */}
+      {/* Nutrition: UFC GYM-style overlapping panel — wide photo, card cutting across it. */}
       <section className="bg-cream-200/60 py-20 sm:py-28" aria-labelledby="nutrition-heading">
-        <div className="container-x grid gap-10 lg:grid-cols-2 lg:items-center">
-          <Reveal>
+        <div className="container-x grid lg:grid-cols-12 lg:items-center">
+          <Reveal className="lg:col-span-8 lg:col-start-1 lg:row-start-1">
+            <PhotoFigure
+              photo={photos.groupSeatedChatDusk}
+              aspect="aspect-[4/3] lg:aspect-[16/10]"
+              sizes="(min-width: 1024px) 66vw, 100vw"
+            />
+          </Reveal>
+          <Reveal
+            delay={120}
+            className="relative z-10 -mt-16 mx-4 border-t-4 border-brand-500 bg-cream-50 p-8 shadow-lift sm:mx-10 sm:p-10 lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:mx-0 lg:mt-0"
+          >
             <SectionHeading
               id="nutrition-heading"
               eyebrow="Nutrition support"
@@ -92,36 +102,37 @@ export default function HomePage() {
                 </p>
               }
             />
-            <Link href="/nutrition" className="btn btn-primary mt-8">
-              About nutrition support
+            <Link href="/nutrition" className="link-arrow mt-8">
+              Find out more
             </Link>
-          </Reveal>
-          <Reveal delay={120}>
-            <PhotoFigure
-              photo={photos.groupSeatedChatDusk}
-              aspect="aspect-[4/3] lg:aspect-[5/4]"
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="shadow-soft"
-            />
           </Reveal>
         </div>
       </section>
 
       <FaqSection />
 
-      {/* Final CTA */}
-      <section className="dark-surface bg-charcoal-900 py-20 text-white sm:py-28" aria-labelledby="cta-heading">
-        <div className="container-x flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+      {/* Final CTA: full-width brand-red band (UFC GYM's "Your closest club" slot). */}
+      <section
+        className="dark-surface relative overflow-hidden bg-brand-600 py-20 text-white sm:py-24"
+        aria-labelledby="cta-heading"
+      >
+        <span
+          aria-hidden="true"
+          className="display-condensed pointer-events-none absolute -right-6 -bottom-10 text-[clamp(8rem,22vw,20rem)] leading-none text-white/[0.07] select-none"
+        >
+          Together
+        </span>
+        <div className="container-x relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <h2 id="cta-heading" className="text-4xl sm:text-5xl">
+            <h2 id="cta-heading" className="text-5xl sm:text-7xl">
               Your first step starts here.
             </h2>
-            <p className="mt-4 text-lg text-ink-on-dark-muted">
+            <p className="mt-5 text-lg text-white/85">
               Tell us what you&rsquo;re looking for, and we&rsquo;ll help you find a suitable class.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/contact" className="btn btn-primary">
+            <Link href="/contact" className="btn bg-charcoal-950 text-white hover:bg-white hover:text-charcoal-950">
               Find my first class
             </Link>
             <Link href="/classes" className="btn btn-secondary">

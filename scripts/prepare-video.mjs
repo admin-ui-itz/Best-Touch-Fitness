@@ -14,7 +14,7 @@
  *     the pixel count by ~55%.
  *   - 30fps (from 60fps): halves the frame count with no visible loss for a
  *     slow pullback shot; this is not an action/sports-replay use case.
- *   - keyframe every 15 frames (0.5s) with scene-cut detection disabled: the
+ *   - keyframe every 6 frames (0.2s) with scene-cut detection disabled: the
  *     scroll-scrub implementation seeks to arbitrary timestamps continuously,
  *     and seek speed is bounded by distance to the nearest keyframe. Frequent,
  *     *regular* keyframes make every seek fast and predictable.
@@ -35,9 +35,17 @@ import path from "node:path";
 import ffmpegPath from "ffmpeg-static";
 import sharp from "sharp";
 
-const source = process.argv[2];
+const [source, ...flags] = process.argv.slice(2);
+const flag = (name) => {
+  const i = flags.indexOf(`--${name}`);
+  return i >= 0 ? flags[i + 1] : undefined;
+};
+/** Optional trim point (seconds), e.g. to drop a tail that repeats the opening shot. */
+const end = flag("end");
+/** Optional poster timestamp (seconds); defaults to the last frame. */
+const posterAt = flag("poster");
 if (!source) {
-  console.error("Usage: node scripts/prepare-video.mjs <source.mp4>");
+  console.error("Usage: node scripts/prepare-video.mjs <source.mp4> [--end 9.95] [--poster 9.0]");
   process.exit(1);
 }
 if (!fs.existsSync(source)) {
@@ -59,13 +67,15 @@ function run(args) {
 run([
   "-y",
   "-i", source,
-  "-vf", "scale=1920:-2,fps=30",
+  ...(end ? ["-t", end] : []),
+  // Cap at 1920 but never upscale: a low-res source gains only bytes from it.
+  "-vf", "scale='min(1920,iw)':-2:flags=lanczos,fps=30",
   "-c:v", "libx264",
   "-profile:v", "high",
-  "-crf", "23",
+  "-crf", "21",
   "-preset", "slow",
-  "-g", "15",
-  "-keyint_min", "15",
+  "-g", "6",
+  "-keyint_min", "6",
   "-sc_threshold", "0",
   "-pix_fmt", "yuv420p",
   "-movflags", "+faststart",
@@ -79,9 +89,10 @@ run([
 // to match the rest of the site's image pipeline rather than ffmpeg's mjpeg
 // encoder.
 const rawFrame = path.join(outDir, "_raw-frame.png");
-run(["-y", "-sseof", "-0.15", "-i", source, "-frames:v", "1", "-update", "1", rawFrame]);
+const seek = posterAt ? ["-ss", posterAt] : ["-sseof", "-0.15"];
+run(["-y", ...seek, "-i", source, "-frames:v", "1", "-update", "1", rawFrame]);
 const posterInfo = await sharp(rawFrame)
-  .resize({ width: 1920 })
+  .resize({ width: 1920, withoutEnlargement: true })
   .jpeg({ quality: 82, mozjpeg: true, progressive: true })
   .toFile(outPoster);
 fs.unlinkSync(rawFrame);

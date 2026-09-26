@@ -9,16 +9,22 @@ Two things worth the owner's attention (also in `docs/OWNER-CHECKLIST.md`):
 - **Resolution**: 206px is on the small side for a logo. It's fine at the sizes currently used (40px in the header, 64px in the footer), but would look soft blown up larger. A higher-resolution original (SVG ideally, or a large PNG) would future-proof it.
 - **Background**: the canvas around the circular badge is solid white, not transparent, and the raised-arm silhouette appears to touch/break the circle's edge — which makes an automated "delete the background" pass risky (it could cut into real artwork). We left the file exactly as supplied and instead placed it on a small white rounded "plate" wherever it sits on a dark surface (the footer), so it reads as an intentional badge rather than a stray white box. A transparent-background version would remove the need for that.
 
-## Cinematic scroll video (1v2.mp4, supplied for the redesign)
+## Cinematic scroll video (AI Assets/1.mp4)
 
-An 8.06-second, 2562×1440, 60fps H.264 clip (source `D:\Clients 2026\Kevin Glover\Gym\Ai Video\1v2.mp4`, ~12MB): a stable camera pullback starting on a dumbbell and mat, revealing two reference athletes standing together under the real outdoor marquee at night. Matches the brief's description closely — no cuts, no generated lettering, the final frame is a clean wide composition.
+A 12.04-second, 854×480, 24fps AI-generated H.264 clip (source `D:\Clients 2026\Kevin Glover\AI Assets\1.mp4`, ~4MB) with five cuts, detected with ffmpeg's scene filter: dumbbell pick-up (0s), battle ropes on the beach (1.71s), squat under the tent (3.67s), close-up (5.83s), and two athletes under the tent at night (8.04s). The final ~2s repeat the opening dumbbell shot, so the clip is trimmed at 9.95s. The people shown are generated reference footage, not members.
 
-Re-encoded via `scripts/prepare-video.mjs` (ffmpeg, bundled through the `ffmpeg-static` npm package so no system install is required) into:
+Prepared with `node scripts/prepare-video.mjs "../AI Assets/1.mp4" --end 9.95 --poster 9.0` (ffmpeg is bundled through `ffmpeg-static`):
 
-- `public/video/scroll-story.mp4` — 1920×1080, 30fps, ~2.65 Mbps H.264, **audio stripped** (the section is muted/decorative), regular keyframes every 0.5s for smooth scroll-scrubbing, `+faststart` for progressive playback. **2.53 MB**, down from 12 MB.
-- `public/video/scroll-story-poster.jpg` — the final frame, 1920×1079, mozjpeg-compressed, **116 KB**. Shown immediately and used as the fallback on mobile/reduced-motion/slow connections.
+- `public/video/scroll-story.mp4`: native 854×480 (never upscaled), 30fps, **audio stripped**, a keyframe every 0.2s for smooth scroll-scrubbing, `+faststart`. **1.97 MB**.
+- `public/video/scroll-story-poster.jpg`: the two-athletes frame at 9.0s, **37 KB**. This is the play-mode poster and the reduced-motion/slow-connection fallback.
 
-Central config: `src/config/video.ts`. Swapping the clip later is a one-line change there plus re-running the prepare script — no component edits needed.
+Central config: `src/config/video.ts`. Each chapter's start time matches a scene cut. To use a new clip, re-run the prepare script and update the chapter times.
+
+**Resolution note:** at 854×480 the clip looks soft when shown full-bleed on large desktop screens. A 1080p export of the same clip would noticeably sharpen the section.
+
+## Favicon
+
+`public/icon.svg` is the source file: a "BT" monogram with the brand-red angled bar from the hero headline. Run `node scripts/generate-favicons.mjs` to generate `public/favicon.ico` (16/32/48) and `public/apple-touch-icon.png` (180) from it.
 
 ## Batch 1: real class photography (1.jpg-20.jpg)
 
@@ -87,7 +93,7 @@ The Senior Circuit class deliberately **keeps its real photo** (7.jpg, cool-down
 
 ## Missing assets
 
-- Logo / wordmark: **not supplied**. A provisional dumbbell glyph + text wordmark is used (`src/components/ui/logo.tsx`, `public/icon.svg`).
+- Logo: supplied (see top of this file). The favicon is a "BT" monogram derived from the brand (`public/icon.svg`).
 - Brand colours / fonts: **not supplied**. Provisional charcoal, warm white and electric-lime palette with Archivo (display) and Manrope (body).
 - Trainer portraits: **not supplied**. The About page shows community copy until verified trainer details are added.
 - Photographs of Spin or Step: **not supplied** (classes are unconfirmed).

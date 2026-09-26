@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Manrope } from "next/font/google";
+import { Archivo, Bebas_Neue, Manrope } from "next/font/google";
 
 import { siteConfig } from "@/config/site";
 
@@ -9,6 +9,14 @@ const archivo = Archivo({
   subsets: ["latin"],
   variable: "--font-archivo",
   axes: ["wdth"],
+  display: "swap",
+});
+
+// Condensed display face for headlines (the sports-brand voice).
+const bebas = Bebas_Neue({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-bebas",
   display: "swap",
 });
 
@@ -38,11 +46,17 @@ export const metadata: Metadata = {
     images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: siteConfig.tagline }],
   },
   twitter: { card: "summary_large_image" },
-  icons: { icon: "/icon.svg" },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#17181b",
+  themeColor: "#0a0a0a",
   width: "device-width",
   initialScale: 1,
 };
@@ -50,7 +64,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     // suppressHydrationWarning: the inline script below adds data-js before hydration.
-    <html lang="en" className={`${archivo.variable} ${manrope.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${archivo.variable} ${bebas.variable} ${manrope.variable}`} suppressHydrationWarning>
       <body className="min-h-dvh flex flex-col">
         {/* Marks JS availability so entrance transitions never hide content without it. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.dataset.js='1'" }} />
